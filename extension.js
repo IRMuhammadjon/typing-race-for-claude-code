@@ -20,6 +20,7 @@ const HOOK_EVENTS = ['UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Notificat
 const TOOL_EVENTS = ['PreToolUse', 'PostToolUse'];
 const AUTHOR_URL = 'https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/';
 const LANGS = ['en', 'uz', 'ru'];
+const GAMES = ['typing', 'g2048', 'breakout'];
 
 // Extension tomonidagi matnlar (o'yin matnlari media/i18n.js da)
 const STRINGS = {
@@ -379,10 +380,12 @@ function openPanel(context, preserveFocus) {
   panel.webview.html = getHtml(panel.webview, media, currentLang());
   panel.webview.onDidReceiveMessage((m) => {
     if (m.type === 'ready') {
-      post({ type: 'init', best: context.globalState.get('bestWpm', 0) });
+      post({ type: 'init', best: readBests(context), game: context.globalState.get('game') });
       post(lastPayload);
-    } else if (m.type === 'best') {
-      context.globalState.update('bestWpm', m.value);
+    } else if (m.type === 'best' && GAMES.includes(m.game)) {
+      context.globalState.update('bests', { ...readBests(context), [m.game]: m.value });
+    } else if (m.type === 'game' && GAMES.includes(m.value)) {
+      context.globalState.update('game', m.value);
     } else if (m.type === 'lang' && LANGS.includes(m.value)) {
       context.globalState.update('lang', m.value).then(updateStatusBar);
     } else if (m.type === 'openAuthor') {
@@ -390,6 +393,13 @@ function openPanel(context, preserveFocus) {
     }
   });
   panel.onDidDispose(() => (panel = undefined));
+}
+
+// Har bir o'yinning rekordi; 0.4 dagi bitta "bestWpm" typing rekordi sifatida olinadi
+function readBests(context) {
+  const bests = context.globalState.get('bests', {});
+  if (bests.typing === undefined) bests.typing = context.globalState.get('bestWpm', 0);
+  return bests;
 }
 
 function getHtml(webview, media, lang) {
@@ -401,12 +411,13 @@ function getHtml(webview, media, lang) {
 <meta charset="UTF-8">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="${uri('typing.css')}">
+<link rel="stylesheet" href="${uri('style.css')}">
 <title>Typing Race</title>
 </head>
 <body data-lang="${lang}">
   <header>
     <div class="logo"><span class="icon">⌨</span>typing<span class="sub">race</span></div>
+    <nav id="tabs" class="tabs"></nav>
     <div id="langs" class="langs">${LANGS.map((l) => `<button data-lang-option="${l}">${l}</button>`).join('')}</div>
   </header>
   <div id="claude-status" class="claude">
@@ -414,33 +425,15 @@ function getHtml(webview, media, lang) {
     <span class="claude-text"><span id="claude-title" class="claude-title"></span><span id="claude-sub" class="claude-sub"></span></span>
   </div>
   <div id="sessions" class="sessions"></div>
-  <div id="levels" class="levels"></div>
-  <main>
-    <div class="live"><span id="progress">0/15</span><span id="live-wpm" class="wpm"></span></div>
-    <div class="track"><div id="track-fill" class="track-fill"></div><span id="car" class="car">🏎️</span></div>
-    <div id="words-wrap" class="words-wrap">
-      <div id="words" class="words"></div>
-      <div id="caret" class="caret"></div>
-      <div id="overlay" class="overlay"><div id="overlay-title" class="title"></div><div id="overlay-text" class="text"></div></div>
-    </div>
-    <div class="stats">
-      <div class="stat"><span class="label" data-i18n="stats.wpm"></span><span id="wpm" class="value">0</span></div>
-      <div class="stat"><span class="label" data-i18n="stats.acc"></span><span id="acc" class="value">100%</span></div>
-      <div class="stat"><span class="label" data-i18n="stats.streak"></span><span id="streak" class="value">0</span></div>
-      <div class="stat"><span class="label" data-i18n="stats.best"></span><span id="best" class="value">0</span></div>
-    </div>
+  <main id="stage" class="stage">
+    <div id="overlay" class="overlay"><div id="overlay-title" class="title"></div><div id="overlay-text" class="text"></div></div>
   </main>
-  <footer>
-    <span><kbd>tab</kbd> <span data-i18n="keys.restart"></span></span>
-    <span><kbd>esc</kbd> <span data-i18n="keys.pause"></span></span>
-    <span><kbd>enter</kbd> <span data-i18n="keys.resume"></span></span>
-    <span><kbd>backspace</kbd> <span data-i18n="keys.back"></span></span>
-  </footer>
+  <footer id="hints"></footer>
   <button id="author" class="author">by Muhammadjon Rahmatullayev <span class="in">in</span></button>
   <div id="toast" class="toast"></div>
-  <script nonce="${nonce}" src="${uri('i18n.js')}"></script>
-  <script nonce="${nonce}" src="${uri('words.js')}"></script>
-  <script nonce="${nonce}" src="${uri('typing.js')}"></script>
+${['i18n.js', 'words.js', 'shell.js', 'games/typing.js', 'games/g2048.js', 'games/breakout.js', 'boot.js']
+  .map((f) => `  <script nonce="${nonce}" src="${uri(f)}"></script>`)
+  .join('\n')}
 </body>
 </html>`;
 }

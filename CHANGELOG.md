@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0
+
+- New game: **2048**, with smooth sliding tiles and mouse drag support
+- New game: **Bug Smash**, a breakout where you squash bugs and catch Claude-tool bonuses (Grep, Bash, Read, Plan, Ultrathink, Rate limit)
+- Switch between games with the tabs at the top; each game keeps its own best score
+- The game you played last opens next time
+
 ## 0.4.1
 
 - Added screenshots and GitHub links to the Marketplace page

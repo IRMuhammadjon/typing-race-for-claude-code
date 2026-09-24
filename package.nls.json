@@ -1,5 +1,5 @@
 {
-  "description": "A Monkeytype-style typing game that opens while Claude Code is working and tells you, session by session, when it's done.",
+  "description": "Typing race, 2048 and Bug Smash: calm mini-games that open while Claude Code works and tell you, session by session, when it's done.",
   "command.open": "Open Typing Race",
   "command.installHooks": "Install Claude Code hooks (optional, detects permission prompts)",
   "command.uninstallHooks": "Remove Claude Code hooks",

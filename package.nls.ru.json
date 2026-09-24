@@ -1,5 +1,5 @@
 {
-  "description": "Игра на скорость печати в стиле Monkeytype, которая открывается, пока работает Claude Code, и сообщает, какая сессия завершилась.",
+  "description": "Печать на скорость, 2048 и Bug Smash: спокойные мини-игры, которые открываются, пока работает Claude Code, и сообщают, какая сессия завершилась.",
   "command.open": "Открыть Typing Race",
   "command.installHooks": "Установить хуки Claude Code (необязательно, для запросов разрешений)",
   "command.uninstallHooks": "Удалить хуки Claude Code",

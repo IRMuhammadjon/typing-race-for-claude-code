@@ -2,7 +2,7 @@
   "name": "typing-race-for-claude-code",
   "displayName": "Typing Race for Claude Code",
   "description": "%description%",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "publisher": "MuhammadjonRahmatullayev",
   "author": {
     "name": "Muhammadjon Rahmatullayev",
@@ -35,6 +35,9 @@
     "typing",
     "typing test",
     "monkeytype",
+    "2048",
+    "breakout",
+    "arcade",
     "game",
     "productivity",
     "ai"

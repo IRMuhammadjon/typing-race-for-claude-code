@@ -1,17 +1,42 @@
 # Typing Race for Claude Code
 
-**Stop staring at the spinner.** Typing Race is a calm, Monkeytype-style typing game that opens next to Claude Code while it works, and tells you the moment a session is done.
+**Stop staring at the spinner.** Three calm mini-games open next to Claude Code while it works, and they tell you the moment a session is done.
 
 ![Typing Race while two Claude sessions are working](images/screenshot.png)
 
-## Features
+## Three games
+
+### ⌨ Typing Race
+A Monkeytype-style typing test that starts easy and climbs through 6 levels: `if for let` → `class async` → `return promise` → `constructor` → `useEffect TryGetValue` → `x?.y??z`. Typed words stay on screen, and `Backspace` on an empty word jumps back to fix the previous mistake.
+
+### ▦ 2048
+The classic, in soft serika colors. Tiles slide smoothly and pop when they merge. Play with the arrow keys, WASD, or by dragging with the mouse.
+
+![2048](images/screenshot-2048.png)
+
+### ✳ Bug Smash
+Breakout, but the bricks are bugs: `null`, `TODO`, `flaky`, `NaN`, `undefined`… Your paddle is **claude** and the ball is a spinning spark. Dashed "legacy" bricks take two hits, and 🐛 bricks always drop a bonus. The bonuses are Claude Code tools:
+
+| Bonus | Effect |
+|---|---|
+| 🔍 **Grep** | wider paddle |
+| ⚡ **Bash** | splits into three balls |
+| 📄 **Read** | slower ball |
+| 🛡️ **Plan** | one-time safety net |
+| ✨ **Ultrathink** | the ball smashes straight through bricks |
+| ❤️ **+1** | extra life |
+| ⏳ **Rate limit** | *careful:* smaller paddle |
+
+Move with `←` `→` or the mouse, and launch with `space` or a click.
+
+![Bug Smash](images/screenshot-breakout.png)
+
+## Claude-aware
 
 - **Works right away.** It follows Claude Code's own session files, so there's nothing to install or configure.
 - **Tracks every session.** Run four Claude sessions at once and each one is listed by its title. When one finishes, you'll see *"«Fix flaky payment tests» is done"*, even while the others keep working.
-- **Hard to miss.** When Claude finishes, the whole background shifts to a soft green and the game pauses. When Claude needs your permission, it turns warm amber. You won't miss it even while you're focused on typing.
-- **Easy on the eyes.** The low-contrast "serika dark" palette has no pure white or pure black. The caret moves smoothly, and only three lines of text are shown at a time.
-- **Starts easy.** There are 6 levels: `if for let` → `class async` → `return promise` → `constructor` → `useEffect TryGetValue` → `x?.y??z`.
-- **Monkeytype controls.** Typed words stay on screen. `Backspace` on an empty word jumps back to fix the previous mistake, and `Tab` restarts.
+- **Hard to miss.** When Claude finishes, the whole background shifts to a soft green and the game pauses. When Claude needs your permission, it turns warm amber.
+- **Easy on the eyes.** The low-contrast "serika dark" palette has no pure white or pure black.
 - **English, O'zbekcha, Русский.** Pick your language right in the game.
 
 ![A session finished while another is still working](images/screenshot-done.png)
@@ -19,19 +44,12 @@
 ## How to use
 
 1. Install the extension.
-2. Ask Claude Code something. The game opens beside the Claude panel without taking focus.
-3. Click into the game and start typing.
+2. Ask Claude Code something. The games open beside the Claude panel without taking focus.
+3. Pick a game from the tabs at the top and start playing.
 
-You can also open it at any time from the **⌨ Typing Race** button in the status bar or with **Typing Race: Open Typing Race** in the command palette.
+You can also open them at any time from the **⌨ Typing Race** button in the status bar or with **Typing Race: Open Typing Race** in the command palette.
 
-| Key | Action |
-|---|---|
-| `space` | next word |
-| `backspace` | delete / go back to the previous wrong word |
-| `ctrl+backspace` | clear the word |
-| `tab` | restart |
-| `esc` | pause |
-| `enter` | resume |
+In every game, `tab` restarts, `esc` pauses and `enter` resumes. Bug Smash pauses automatically when you click away.
 
 ## Optional: permission alerts
 
