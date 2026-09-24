@@ -1,5 +1,5 @@
 // Interfeys matnlari: en / uz / ru
-window.I18N = {
+const I18N = {
   en: {
     games: { typing: 'typing', g2048: '2048', breakout: 'bug smash' },
     levels: ['Very easy', 'Easy', 'Medium', 'Hard', 'camelCase', 'Symbols'],
@@ -7,6 +7,7 @@ window.I18N = {
     keys: {
       restart: 'restart', pause: 'pause', resume: 'resume', back: 'fix previous word',
       move: 'move', launch: 'launch', mouse: 'mouse works too',
+      next: 'next game', quit: 'quit', lang: 'language',
     },
     authorTitle: 'Open LinkedIn profile',
     start: 'start typing to begin',
@@ -19,6 +20,7 @@ window.I18N = {
     // 2048
     g2048Start: 'join the tiles, reach 2048',
     g2048StartSub: 'arrows / wasd or drag with the mouse',
+    g2048StartSubKeys: 'arrow keys or wasd',
     g2048Over: (score) => `no more moves · score ${score}`,
     g2048Win: '✨ 2048! keep going',
     // Bug smash
@@ -63,6 +65,7 @@ window.I18N = {
     keys: {
       restart: 'qaytadan', pause: 'pauza', resume: 'davom etish', back: "xato so'zga qaytish",
       move: 'yurish', launch: 'otish', mouse: 'sichqoncha ham ishlaydi',
+      next: "keyingi o'yin", quit: 'chiqish', lang: 'til',
     },
     authorTitle: 'LinkedIn profilini ochish',
     start: 'boshlash uchun yozishni boshlang',
@@ -74,6 +77,7 @@ window.I18N = {
     lastLevel: '🏆 Oxirgi daraja! Yana bir aylana',
     g2048Start: "kataklarni birlashtiring, 2048 ga yeting",
     g2048StartSub: 'strelkalar / wasd yoki sichqoncha bilan suring',
+    g2048StartSubKeys: 'strelkalar yoki wasd bilan suring',
     g2048Over: (score) => `yurish qolmadi · ochko ${score}`,
     g2048Win: '✨ 2048! davom eting',
     bStart: 'buglarni yo\'q qiling',
@@ -116,6 +120,7 @@ window.I18N = {
     keys: {
       restart: 'заново', pause: 'пауза', resume: 'продолжить', back: 'исправить слово',
       move: 'движение', launch: 'запуск', mouse: 'мышь тоже работает',
+      next: 'следующая игра', quit: 'выход', lang: 'язык',
     },
     authorTitle: 'Открыть профиль LinkedIn',
     start: 'начните печатать',
@@ -127,6 +132,7 @@ window.I18N = {
     lastLevel: '🏆 Последний уровень! Ещё круг',
     g2048Start: 'соединяйте плитки, дойдите до 2048',
     g2048StartSub: 'стрелки / wasd или перетаскивание мышью',
+    g2048StartSubKeys: 'стрелки или wasd',
     g2048Over: (score) => `ходов больше нет · очки ${score}`,
     g2048Win: '✨ 2048! продолжайте',
     bStart: 'уничтожьте баги',
@@ -163,3 +169,7 @@ window.I18N = {
     claude: 'claude',
   },
 };
+
+// Brauzerda (VS Code webview) global o'zgaruvchi, Node.js da (terminal versiya) modul
+if (typeof module === 'object' && module.exports) module.exports = I18N;
+else window.I18N = I18N;

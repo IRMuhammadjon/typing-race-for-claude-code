@@ -53,6 +53,21 @@ You can also open them at any time from the **Zerikma** button in the status bar
 
 In every game, `tab` restarts, `esc` pauses and `enter` resumes. Bug Smash pauses automatically when you click away.
 
+## Working in the terminal? `/zerikma`
+
+Zerikma also runs in the terminal, with the same three games and the same "Claude is done" alerts.
+
+**Inside Claude Code**, install the plugin once:
+
+```
+/plugin marketplace add IRMuhammadjon/typing-race-for-claude-code
+/plugin install zerikma@zerikma
+```
+
+After that, type **`/zerikma`** in any session. The games open in a tmux split, a Windows Terminal pane or a new window, or as this panel if Claude runs inside VS Code. `/zerikma 2048` and `/zerikma bug` start a specific game.
+
+**Or run it yourself** in a second terminal: `npx zerikma` ([details](cli/README.md)).
+
 ## Optional: permission alerts
 
 Claude Code doesn't record in its session files when it's waiting for your permission. To get an amber **"Claude needs your permission"** alert as well, run **Zerikma: Install Claude Code hooks** once. This adds a small hook to `~/.claude/settings.json` and keeps a backup as `settings.json.bak-typing-race`. You can remove it any time with **Zerikma: Remove Claude Code hooks**.

@@ -1,0 +1,14 @@
+{
+  "name": "zerikma",
+  "displayName": "Zerikma",
+  "version": "0.1.0",
+  "description": "Type /zerikma to open mini games (typing race, 2048, Bug Smash) next to Claude while it works. They tell you when Claude is done.",
+  "author": {
+    "name": "Muhammadjon Rahmatullayev",
+    "url": "https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/"
+  },
+  "homepage": "https://github.com/IRMuhammadjon/typing-race-for-claude-code",
+  "repository": "https://github.com/IRMuhammadjon/typing-race-for-claude-code",
+  "license": "MIT",
+  "keywords": ["games", "typing", "2048", "breakout", "fun"]
+}

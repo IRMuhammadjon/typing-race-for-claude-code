@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0
+
+- New: **terminal version** (`npx zerikma`) with all three games
+- New: **`/zerikma`** Claude Code plugin opens the games next to Claude: tmux split, Windows Terminal pane, new window, or this panel when Claude runs inside VS Code
+- The panel can now be opened from outside VS Code through `vscode://MuhammadjonRahmatullayev.typing-race-for-claude-code/open`
+- Session tracking, translations and word lists are shared between the VS Code and terminal versions
+
 ## 0.5.1
 
 - Renamed to **Zerikma for Claude Code** ("zerikma" means "don't get bored" in Uzbek)

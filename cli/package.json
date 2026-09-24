@@ -1,0 +1,46 @@
+{
+  "name": "zerikma",
+  "version": "0.1.0",
+  "description": "Mini games in your terminal while Claude Code works: typing race, 2048 and Bug Smash. Tells you the moment Claude is done.",
+  "bin": {
+    "zerikma": "bin/zerikma.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "shared",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "prepack": "node scripts/sync-shared.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "terminal",
+    "tui",
+    "game",
+    "typing",
+    "2048",
+    "breakout",
+    "cli"
+  ],
+  "author": {
+    "name": "Muhammadjon Rahmatullayev",
+    "url": "https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IRMuhammadjon/typing-race-for-claude-code.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/IRMuhammadjon/typing-race-for-claude-code/issues"
+  },
+  "homepage": "https://github.com/IRMuhammadjon/typing-race-for-claude-code/tree/main/cli#readme"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "zerikma",
+  "description": "Zerikma: mini games that open next to Claude Code while it works",
+  "owner": {
+    "name": "Muhammadjon Rahmatullayev",
+    "url": "https://github.com/IRMuhammadjon"
+  },
+  "plugins": [
+    {
+      "name": "zerikma",
+      "source": "./",
+      "description": "Type /zerikma to open mini games next to Claude while it works. They tell you when Claude is done."
+    }
+  ]
+}

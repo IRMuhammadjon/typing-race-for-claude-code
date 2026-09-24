@@ -1,6 +1,6 @@
 // Darajalar juda oson so'zlardan boshlanib, asta-sekin qiyinlashadi (nomlari i18n.js da).
 // So'zlarda probel bo'lmasligi kerak: probel keyingi so'zga o'tish tugmasi.
-window.WORD_LEVELS = [
+const WORD_LEVELS = [
   {
     words: [
       'if', 'do', 'in', 'is', 'as', 'or', 'on', 'to', 'go', 'up',
@@ -52,3 +52,7 @@ window.WORD_LEVELS = [
     ],
   },
 ];
+
+// Brauzerda (VS Code webview) global o'zgaruvchi, Node.js da (terminal versiya) modul
+if (typeof module === 'object' && module.exports) module.exports = WORD_LEVELS;
+else window.WORD_LEVELS = WORD_LEVELS;

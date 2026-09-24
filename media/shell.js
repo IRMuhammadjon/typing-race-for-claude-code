@@ -291,7 +291,7 @@
   // Tugagan, lekin foydalanuvchi hali ko'rmagan sessiya (Enter bosilguncha ko'rsatiladi)
   let finishedNotice = null;
 
-  const quote = (s) => `«${s.title}»`;
+  const quote = window.ZerikmaBanner.quote;
 
   // Fon rangi va katta panel orqali holatni bildiradi: o'ynayotgan odam burchakka qaramaydi
   function showClaude(view, title, sub) {
@@ -326,27 +326,10 @@
   }
 
   function renderClaude() {
-    const T = App.T;
     renderSessions();
-    const busy = claude.sessions.filter((s) => s.status === 'busy');
-    const waiting = claude.sessions.find((s) => s.status === 'waiting');
-    const multi = claude.sessions.length > 1;
-    const busyNote = busy.length ? T.othersBusy(busy.length) : T.noOthersBusy;
-
-    if (waiting) {
-      showClaude('waiting', T.waiting(multi ? quote(waiting) : T.claude), T.waitingSub);
-    } else if (finishedNotice) {
-      showClaude('done', T.finished(quote(finishedNotice)), T.finishedSub(busyNote));
-    } else if (busy.length) {
-      claudeWasActive = true;
-      const title = busy.length > 1 ? T.busyMulti(busy.length) : T.busy(busy[0].tool);
-      const sub = busy.length > 1 ? T.busyMultiSub : T.busySub(quote(busy[0]));
-      showClaude('busy', title, sub);
-    } else if (claudeWasActive) {
-      showClaude('done', T.allDone, T.allDoneSub);
-    } else {
-      showClaude('idle', T.idle, T.idleSub);
-    }
+    if (claude.sessions.some((s) => s.status === 'busy')) claudeWasActive = true;
+    const b = window.ZerikmaBanner.claudeBanner(App.T, claude.sessions, finishedNotice, claudeWasActive);
+    showClaude(b.view, b.title, b.sub);
   }
 
   function onFinished(session) {

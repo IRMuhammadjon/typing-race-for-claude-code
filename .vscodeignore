@@ -4,3 +4,6 @@
 *.vsix
 images/icon.svg
 images/screenshot*.png
+cli/**
+skills/**
+.claude-plugin/**
