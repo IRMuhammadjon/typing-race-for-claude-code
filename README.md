@@ -1,8 +1,10 @@
-# Typing Race for Claude Code
+# Zerikma for Claude Code
+
+> *Zerikma* means **"don't get bored"** in Uzbek.
 
 **Stop staring at the spinner.** Three calm mini-games open next to Claude Code while it works, and they tell you the moment a session is done.
 
-![Typing Race while two Claude sessions are working](images/screenshot.png)
+![Zerikma while Claude sessions are working](images/screenshot.png)
 
 ## Three games
 
@@ -47,13 +49,13 @@ Move with `←` `→` or the mouse, and launch with `space` or a click.
 2. Ask Claude Code something. The games open beside the Claude panel without taking focus.
 3. Pick a game from the tabs at the top and start playing.
 
-You can also open them at any time from the **⌨ Typing Race** button in the status bar or with **Typing Race: Open Typing Race** in the command palette.
+You can also open them at any time from the **Zerikma** button in the status bar or with **Zerikma: Open games** in the command palette.
 
 In every game, `tab` restarts, `esc` pauses and `enter` resumes. Bug Smash pauses automatically when you click away.
 
 ## Optional: permission alerts
 
-Claude Code doesn't record in its session files when it's waiting for your permission. To get an amber **"Claude needs your permission"** alert as well, run **Typing Race: Install Claude Code hooks** once. This adds a small hook to `~/.claude/settings.json` and keeps a backup as `settings.json.bak-typing-race`. You can remove it any time with **Typing Race: Remove Claude Code hooks**.
+Claude Code doesn't record in its session files when it's waiting for your permission. To get an amber **"Claude needs your permission"** alert as well, run **Zerikma: Install Claude Code hooks** once. This adds a small hook to `~/.claude/settings.json` and keeps a backup as `settings.json.bak-typing-race`. You can remove it any time with **Zerikma: Remove Claude Code hooks**.
 
 ## Settings
 

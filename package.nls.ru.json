@@ -1,6 +1,6 @@
 {
   "description": "Печать на скорость, 2048 и Bug Smash: спокойные мини-игры, которые открываются, пока работает Claude Code, и сообщают, какая сессия завершилась.",
-  "command.open": "Открыть Typing Race",
+  "command.open": "Открыть игры",
   "command.installHooks": "Установить хуки Claude Code (необязательно, для запросов разрешений)",
   "command.uninstallHooks": "Удалить хуки Claude Code",
   "config.autoOpen": "Автоматически открывать игру, когда Claude начинает работу"

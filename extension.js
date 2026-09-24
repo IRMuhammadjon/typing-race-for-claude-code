@@ -26,34 +26,34 @@ const GAMES = ['typing', 'g2048', 'breakout'];
 const STRINGS = {
   en: {
     busy: 'Claude is working',
-    busyTip: 'Play Typing Race while you wait',
+    busyTip: 'Play a mini game while you wait',
     waiting: 'Claude needs permission',
     waitingTip: 'Go back to the Claude panel',
-    idleTip: 'Open Typing Race',
+    idleTip: 'Open Zerikma',
     hooksInstalled: 'Claude Code hooks installed. Restart running Claude sessions.',
-    hooksRemoved: 'Typing Race hooks removed.',
+    hooksRemoved: 'Zerikma hooks removed.',
     settingsReadError: (e) => `Could not read ~/.claude/settings.json: ${e}`,
     hooksRemoveError: (e) => `Could not remove hooks: ${e}`,
   },
   uz: {
     busy: 'Claude ishlayapti',
-    busyTip: "Kutayotganda Typing Race o'ynang",
+    busyTip: "Kutayotganda mini o'yin o'ynang",
     waiting: 'Claude ruxsat kutyapti',
     waitingTip: 'Claude paneliga qayting',
-    idleTip: "Typing Race'ni ochish",
+    idleTip: "Zerikma'ni ochish",
     hooksInstalled: "Claude Code hook'lari o'rnatildi. Ishlab turgan Claude sessiyalarini qayta ishga tushiring.",
-    hooksRemoved: "Typing Race hook'lari o'chirildi.",
+    hooksRemoved: "Zerikma hook'lari o'chirildi.",
     settingsReadError: (e) => `~/.claude/settings.json o'qib bo'lmadi: ${e}`,
     hooksRemoveError: (e) => `Hook'larni o'chirib bo'lmadi: ${e}`,
   },
   ru: {
     busy: 'Claude работает',
-    busyTip: 'Сыграйте в Typing Race, пока ждёте',
+    busyTip: 'Сыграйте в мини-игру, пока ждёте',
     waiting: 'Claude ждёт разрешения',
     waitingTip: 'Вернитесь в панель Claude',
-    idleTip: 'Открыть Typing Race',
+    idleTip: 'Открыть Zerikma',
     hooksInstalled: 'Хуки Claude Code установлены. Перезапустите активные сессии Claude.',
-    hooksRemoved: 'Хуки Typing Race удалены.',
+    hooksRemoved: 'Хуки Zerikma удалены.',
     settingsReadError: (e) => `Не удалось прочитать ~/.claude/settings.json: ${e}`,
     hooksRemoveError: (e) => `Не удалось удалить хуки: ${e}`,
   },
@@ -355,7 +355,7 @@ function updateStatusBar() {
     statusItem.text = `$(bell) ${t().waiting}`;
     statusItem.tooltip = t().waitingTip;
   } else {
-    statusItem.text = '$(keyboard) Typing Race';
+    statusItem.text = '$(smiley) Zerikma';
     statusItem.tooltip = t().idleTip;
   }
 }
@@ -372,7 +372,7 @@ function openPanel(context, preserveFocus) {
   const media = vscode.Uri.joinPath(context.extensionUri, 'media');
   panel = vscode.window.createWebviewPanel(
     'typingRace.game',
-    '⌨️ Typing Race',
+    '🎮 Zerikma',
     { viewColumn: vscode.ViewColumn.Beside, preserveFocus },
     { enableScripts: true, retainContextWhenHidden: true, localResourceRoots: [media] }
   );
@@ -412,11 +412,11 @@ function getHtml(webview, media, lang) {
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="${uri('style.css')}">
-<title>Typing Race</title>
+<title>Zerikma</title>
 </head>
 <body data-lang="${lang}">
   <header>
-    <div class="logo"><span class="icon">⌨</span>typing<span class="sub">race</span></div>
+    <div class="logo"><span class="icon">✳</span>zerik<span class="sub">ma</span></div>
     <nav id="tabs" class="tabs"></nav>
     <div id="langs" class="langs">${LANGS.map((l) => `<button data-lang-option="${l}">${l}</button>`).join('')}</div>
   </header>

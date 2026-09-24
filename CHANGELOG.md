@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.1
+
+- Renamed to **Zerikma for Claude Code** ("zerikma" means "don't get bored" in Uzbek)
+
 ## 0.5.0
 
 - New game: **2048**, with smooth sliding tiles and mouse drag support
