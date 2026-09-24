@@ -1,0 +1,7 @@
+{
+  "description": "Игра на скорость печати в стиле Monkeytype, которая открывается, пока работает Claude Code, и сообщает, какая сессия завершилась.",
+  "command.open": "Открыть Typing Race",
+  "command.installHooks": "Установить хуки Claude Code (необязательно, для запросов разрешений)",
+  "command.uninstallHooks": "Удалить хуки Claude Code",
+  "config.autoOpen": "Автоматически открывать игру, когда Claude начинает работу"
+}

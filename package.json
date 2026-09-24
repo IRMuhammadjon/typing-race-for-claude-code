@@ -1,0 +1,67 @@
+{
+  "name": "typing-race-for-claude-code",
+  "displayName": "Typing Race for Claude Code",
+  "description": "%description%",
+  "version": "0.4.0",
+  "publisher": "local",
+  "author": {
+    "name": "Muhammadjon Rahmatullayev",
+    "url": "https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/"
+  },
+  "license": "MIT",
+  "icon": "images/icon.png",
+  "galleryBanner": {
+    "color": "#323437",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Education"
+  ],
+  "keywords": [
+    "claude",
+    "claude code",
+    "typing",
+    "typing test",
+    "monkeytype",
+    "game",
+    "productivity",
+    "ai"
+  ],
+  "main": "./extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "typingRace.open",
+        "title": "%command.open%",
+        "category": "Typing Race"
+      },
+      {
+        "command": "typingRace.installHooks",
+        "title": "%command.installHooks%",
+        "category": "Typing Race"
+      },
+      {
+        "command": "typingRace.uninstallHooks",
+        "title": "%command.uninstallHooks%",
+        "category": "Typing Race"
+      }
+    ],
+    "configuration": {
+      "title": "Typing Race",
+      "properties": {
+        "typingRace.autoOpen": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.autoOpen%"
+        }
+      }
+    }
+  }
+}
