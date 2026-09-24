@@ -2,6 +2,8 @@
 
 **Stop staring at the spinner.** Typing Race is a calm, Monkeytype-style typing game that opens next to Claude Code while it works, and tells you the moment a session is done.
 
+![Typing Race while two Claude sessions are working](images/screenshot.png)
+
 ## Features
 
 - **Works right away.** It follows Claude Code's own session files, so there's nothing to install or configure.
@@ -11,6 +13,8 @@
 - **Starts easy.** There are 6 levels: `if for let` → `class async` → `return promise` → `constructor` → `useEffect TryGetValue` → `x?.y??z`.
 - **Monkeytype controls.** Typed words stay on screen. `Backspace` on an empty word jumps back to fix the previous mistake, and `Tab` restarts.
 - **English, O'zbekcha, Русский.** Pick your language right in the game.
+
+![A session finished while another is still working](images/screenshot-done.png)
 
 ## How to use
 
@@ -55,4 +59,6 @@ This is an independent community project. It is **not affiliated with, endorsed 
 
 Made by **Muhammadjon Rahmatullayev** · [LinkedIn](https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/)
 
-Licensed under the MIT License.
+Found a bug or have an idea? [Open an issue](https://github.com/IRMuhammadjon/typing-race-for-claude-code/issues).
+
+Licensed under the [MIT License](LICENSE).

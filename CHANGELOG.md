@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- Added screenshots and GitHub links to the Marketplace page
+
 ## 0.4.0
 
 First public release.

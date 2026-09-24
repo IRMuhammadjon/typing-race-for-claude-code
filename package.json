@@ -2,13 +2,21 @@
   "name": "typing-race-for-claude-code",
   "displayName": "Typing Race for Claude Code",
   "description": "%description%",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "publisher": "MuhammadjonRahmatullayev",
   "author": {
     "name": "Muhammadjon Rahmatullayev",
     "url": "https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/"
   },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/IRMuhammadjon/typing-race-for-claude-code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IRMuhammadjon/typing-race-for-claude-code/issues"
+  },
+  "homepage": "https://github.com/IRMuhammadjon/typing-race-for-claude-code#readme",
   "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#323437",
