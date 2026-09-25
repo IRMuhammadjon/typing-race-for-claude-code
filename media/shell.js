@@ -315,6 +315,7 @@
   App.claudeState = () => claude;
   App.news = [];
   App.newsRead = [];
+  App.newsQuiz = {};
   // Tugagan, lekin foydalanuvchi hali ko'rmagan sessiya (Enter bosilguncha ko'rsatiladi)
   let finishedNotice = null;
 
@@ -454,6 +455,7 @@
     if (m.type === 'init') {
       App.best = m.best || {};
       App.newsRead = m.newsRead || [];
+      App.newsQuiz = m.newsQuiz || {};
       guard = Guard.createGuard({ strict: m.strict !== false, lastSnoozeAt: m.lastSnoozeAt || 0 });
       for (const id of App.order) if (App.games[id].refresh) App.games[id].refresh();
       if (m.game) switchGame(m.game, false);

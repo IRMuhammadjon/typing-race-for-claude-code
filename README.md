@@ -8,7 +8,13 @@
 
 ## 📰 News: learn Claude Code while you wait
 
-The first tab is a feed of short Claude Code tips in your language (English, O'zbekcha, Русский): `/compact`, plan mode, hooks, skills, subagents, MCP and more, each with the exact command and a link to the official docs. When Claude is using a tool, the tab suggests a related tip (for example, `/permissions` while Claude runs `Bash`). New tips are written from the official Claude Code changelog and reviewed before they ship.
+The first tab teaches Claude Code in your language (English, O'zbekcha, Русский) in three formats:
+
+- **💡 Tips**: one feature at a time (`/compact`, plan mode, `@` mentions, `!` shell mode…), with the exact command
+- **🧪 Recipes**: ready-to-paste configs for hooks, subagents, skills, MCP, permission rules, status line and more, with where to save them and a copy button
+- **🧠 Quiz**: short questions to check what you learned, with your score
+
+Filter by level (beginner / advanced) and topic, and track how many you have read. When Claude is using a tool, the tab suggests a related tip (for example, permission rules while Claude runs `Bash`). Every card links to the official docs. New tips are written from the official Claude Code changelog and reviewed before they ship.
 
 ## Three games
 

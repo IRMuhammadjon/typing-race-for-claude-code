@@ -78,6 +78,7 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     // Yangiliklar tabi uchun
     news: [],
     newsRead: new Set(store.newsRead || []),
+    newsQuiz: store.newsQuiz || {},
     openUrl,
   };
   app.T = I18N[app.lang];
@@ -117,6 +118,28 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     app.newsRead.add(id);
     store.newsRead = [...app.newsRead].slice(-500);
     saveStore(store);
+  };
+
+  app.answerQuiz = (id, choice) => {
+    if (app.newsQuiz[id] !== undefined) return;
+    app.newsQuiz = { ...app.newsQuiz, [id]: choice };
+    store.newsQuiz = app.newsQuiz;
+    saveStore(store);
+  };
+
+  // Retsept kodini nusxalash: OSC 52 (Windows Terminal, iTerm2, tmux, VS Code terminali);
+  // Windows'ning eski konsoli buni bilmaydi, u yerda clip.exe ham ishlatiladi
+  app.copy = (text) => {
+    term.write(`]52;c;${Buffer.from(text, 'utf8').toString('base64')}`);
+    if (process.platform === 'win32') {
+      try {
+        const child = require('child_process').spawn('clip', [], { stdio: ['pipe', 'ignore', 'ignore'] });
+        child.on('error', () => {});
+        child.stdin.end(text);
+      } catch {
+        // clip topilmadi: OSC 52 yetarli
+      }
+    }
   };
 
   app.toast = (text) => {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.9.0
+
+- The News tab is now 43 cards in three kinds: 💡 tips, 🧪 recipes and 🧠 quiz questions
+- Recipes are ready-to-paste configs (hooks, custom subagents, skills, project MCP, permission rules, CLAUDE.md imports, status line, output styles, worktrees, plugin marketplaces) with where to save them and a copy button (`c`)
+- Quiz questions: answer with `1` `2` `3`, see the right answer and why, and keep your score
+- Filter by level (beginner / advanced) with `f` and by topic with `g`, or click the chips
+- Each topic has its own color, the card slides in when you browse, and a progress bar shows how many you have read
+
 ## 0.8.1
 
 - Fixed a finished session showing as "working": after VS Code reloads, Claude Code writes a transcript-only system note (for example about a background task) that does not start a new turn, and it is now ignored

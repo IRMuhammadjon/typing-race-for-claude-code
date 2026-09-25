@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "changelog": {
     "lastVersion": "2.1.282"
   },
@@ -7,6 +7,9 @@
     {
       "id": "queue-while-working",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "Enter",
       "tools": [],
       "link": "https://code.claude.com/docs/en/interactive-mode",
@@ -24,6 +27,9 @@
     {
       "id": "resume-conversation",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "claude --continue",
       "tools": [],
       "link": "https://code.claude.com/docs/en/sessions",
@@ -39,8 +45,73 @@
       }
     },
     {
+      "id": "recipe-format-hook",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "hooks",
+      "tools": [
+        "Edit",
+        "Write"
+      ],
+      "link": "https://code.claude.com/docs/en/hooks-guide",
+      "where": ".claude/settings.json",
+      "codeLang": "json",
+      "code": "{\n  \"hooks\": {\n    \"PostToolUse\": [\n      {\n        \"matcher\": \"Edit|Write\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"jq -r '.tool_input.file_path' | xargs npx prettier --write\"\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "title": {
+        "en": "Auto-format every file Claude edits",
+        "uz": "Claude o'zgartirgan har bir faylni avtomatik formatlash",
+        "ru": "Автоформат каждого файла, который правит Claude"
+      },
+      "body": {
+        "en": "A PostToolUse hook runs after every Edit or Write. The hook gets the tool call as JSON on stdin, so jq pulls out the file path and Prettier formats it. Formatting now always happens, Claude does not have to remember it.",
+        "uz": "PostToolUse hook'i har bir Edit yoki Write'dan keyin ishlaydi. Hook tool chaqiruvini stdin orqali JSON ko'rinishida oladi: jq fayl yo'lini ajratadi, Prettier esa uni formatlaydi. Endi formatlash har doim bo'ladi, Claude buni eslab qolishi shart emas.",
+        "ru": "Хук PostToolUse срабатывает после каждого Edit или Write. Он получает вызов инструмента как JSON через stdin: jq достаёт путь к файлу, Prettier форматирует его. Форматирование происходит всегда, Claude не нужно о нём помнить."
+      }
+    },
+    {
+      "id": "quiz-hook-matcher",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "hooks",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/hooks",
+      "options": [
+        {
+          "en": "\"Edit|Write\"",
+          "uz": "\"Edit|Write\"",
+          "ru": "\"Edit|Write\""
+        },
+        {
+          "en": "\"Edit, Write\"",
+          "uz": "\"Edit, Write\"",
+          "ru": "\"Edit, Write\""
+        },
+        {
+          "en": "\"Edit+Write\"",
+          "uz": "\"Edit+Write\"",
+          "ru": "\"Edit+Write\""
+        }
+      ],
+      "answer": 0,
+      "title": {
+        "en": "Which hook matcher catches both Edit and Write?",
+        "uz": "Qaysi hook matcher Edit va Write'ni birga ushlaydi?",
+        "ru": "Какой matcher хука ловит и Edit, и Write?"
+      },
+      "body": {
+        "en": "The matcher is a regular expression, and | means \"or\".",
+        "uz": "Matcher bu regular expression, | esa \"yoki\" degani.",
+        "ru": "Matcher это регулярное выражение, а | означает «или»."
+      }
+    },
+    {
       "id": "compact-context",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "/compact",
       "tools": [],
       "link": "https://code.claude.com/docs/en/sessions",
@@ -58,6 +129,9 @@
     {
       "id": "clear-start-fresh",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "/clear",
       "tools": [],
       "link": "https://code.claude.com/docs/en/sessions",
@@ -73,8 +147,72 @@
       }
     },
     {
+      "id": "recipe-block-rm-hook",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "hooks",
+      "tools": [
+        "Bash"
+      ],
+      "link": "https://code.claude.com/docs/en/hooks",
+      "where": ".claude/settings.json",
+      "codeLang": "json",
+      "code": "{\n  \"hooks\": {\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"Bash\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"jq -r '.tool_input.command' | grep -q 'rm -rf' && { echo 'rm -rf is blocked' >&2; exit 2; } || exit 0\"\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "title": {
+        "en": "Block dangerous commands before they run",
+        "uz": "Xavfli buyruqlarni ishga tushishidan oldin to'xtatish",
+        "ru": "Блокируйте опасные команды до запуска"
+      },
+      "body": {
+        "en": "A PreToolUse hook sees every Bash command before it runs. Exit code 2 blocks the call, and the text written to stderr goes back to Claude as the reason, so it can pick a safer way.",
+        "uz": "PreToolUse hook'i har bir Bash buyrug'ini u ishga tushishidan oldin ko'radi. 2 chiqish kodi chaqiruvni to'xtatadi, stderr'ga yozilgan matn esa sabab sifatida Claude'ga qaytadi va u xavfsizroq yo'lni tanlaydi.",
+        "ru": "Хук PreToolUse видит каждую Bash-команду до её запуска. Код выхода 2 блокирует вызов, а текст из stderr возвращается Claude как причина, и он выбирает более безопасный путь."
+      }
+    },
+    {
+      "id": "quiz-hook-exit-code",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "hooks",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/hooks",
+      "options": [
+        {
+          "en": "exit 0",
+          "uz": "exit 0",
+          "ru": "exit 0"
+        },
+        {
+          "en": "exit 1",
+          "uz": "exit 1",
+          "ru": "exit 1"
+        },
+        {
+          "en": "exit 2",
+          "uz": "exit 2",
+          "ru": "exit 2"
+        }
+      ],
+      "answer": 2,
+      "title": {
+        "en": "Which exit code from a PreToolUse hook blocks the tool call?",
+        "uz": "PreToolUse hook'ining qaysi chiqish kodi tool chaqiruvini to'xtatadi?",
+        "ru": "Какой код выхода хука PreToolUse блокирует вызов инструмента?"
+      },
+      "body": {
+        "en": "Exit 2 blocks the call and sends stderr to Claude. 0 lets it run, other codes only show an error to you.",
+        "uz": "exit 2 chaqiruvni to'xtatadi va stderr'ni Claude'ga yuboradi. 0 ruxsat beradi, boshqa kodlar esa faqat sizga xatoni ko'rsatadi.",
+        "ru": "exit 2 блокирует вызов и отправляет stderr Claude. 0 разрешает, другие коды только показывают ошибку вам."
+      }
+    },
+    {
       "id": "plan-mode",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "shift+tab",
       "tools": [
         "Edit",
@@ -95,6 +233,9 @@
     {
       "id": "claude-md",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "memory",
       "command": "CLAUDE.md",
       "tools": [],
       "link": "https://code.claude.com/docs/en/memory",
@@ -110,8 +251,70 @@
       }
     },
     {
+      "id": "recipe-notify-hook",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "hooks",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/hooks-guide",
+      "where": "~/.claude/settings.json",
+      "codeLang": "json",
+      "code": "{\n  \"hooks\": {\n    \"Notification\": [\n      {\n        \"matcher\": \"\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"osascript -e 'display notification \\\"Claude needs you\\\" with title \\\"Claude Code\\\"'\"\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "title": {
+        "en": "Desktop alert when Claude needs you",
+        "uz": "Claude sizni kutganda ekranga bildirishnoma",
+        "ru": "Уведомление, когда Claude ждёт вас"
+      },
+      "body": {
+        "en": "The Notification hook fires when Claude asks for permission or waits for input. This one uses macOS; on Linux use notify-send, on Windows a PowerShell toast.",
+        "uz": "Notification hook'i Claude ruxsat so'raganda yoki javob kutganda ishlaydi. Bu misol macOS uchun; Linux'da notify-send, Windows'da PowerShell bildirishnomasidan foydalaning.",
+        "ru": "Хук Notification срабатывает, когда Claude просит разрешение или ждёт ответа. Пример для macOS; в Linux используйте notify-send, в Windows уведомление через PowerShell."
+      }
+    },
+    {
+      "id": "quiz-agents-folder",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "agents",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/sub-agents",
+      "options": [
+        {
+          "en": ".claude/subagents/",
+          "uz": ".claude/subagents/",
+          "ru": ".claude/subagents/"
+        },
+        {
+          "en": ".claude/agents/",
+          "uz": ".claude/agents/",
+          "ru": ".claude/agents/"
+        },
+        {
+          "en": "agents/",
+          "uz": "agents/",
+          "ru": "agents/"
+        }
+      ],
+      "answer": 1,
+      "title": {
+        "en": "Where do project subagents live?",
+        "uz": "Loyiha subagentlari qayerda saqlanadi?",
+        "ru": "Где лежат сабагенты проекта?"
+      },
+      "body": {
+        "en": "One markdown file per subagent in .claude/agents/. Personal ones go to ~/.claude/agents/.",
+        "uz": "Har bir subagent .claude/agents/ ichida alohida markdown fayl. Shaxsiylari ~/.claude/agents/ ga qo'yiladi.",
+        "ru": "По одному markdown-файлу на сабагента в .claude/agents/. Личные кладите в ~/.claude/agents/."
+      }
+    },
+    {
       "id": "init-claude-md",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "memory",
       "command": "/init",
       "tools": [],
       "link": "https://code.claude.com/docs/en/memory",
@@ -129,6 +332,9 @@
     {
       "id": "permissions",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "permissions",
       "command": "/permissions",
       "tools": [
         "Bash"
@@ -146,8 +352,73 @@
       }
     },
     {
+      "id": "recipe-custom-subagent",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "agents",
+      "tools": [
+        "Task",
+        "Agent"
+      ],
+      "link": "https://code.claude.com/docs/en/sub-agents",
+      "where": ".claude/agents/code-reviewer.md",
+      "codeLang": "markdown",
+      "code": "---\nname: code-reviewer\ndescription: Reviews changed code for bugs and readability. Use after big edits.\ntools: Read, Grep, Glob, Bash\nmodel: sonnet\n---\n\nYou are a careful code reviewer. For each problem, show the\ncode, explain the risk and suggest a fix. Follow CLAUDE.md.",
+      "title": {
+        "en": "Make your own subagent",
+        "uz": "O'zingizning subagentingizni yarating",
+        "ru": "Создайте своего сабагента"
+      },
+      "body": {
+        "en": "A markdown file in .claude/agents/ becomes a subagent with its own prompt, tools and model. Claude hands it work that matches the description, and its long output stays out of your main context.",
+        "uz": ".claude/agents/ papkasidagi markdown fayl o'z prompti, tool'lari va modeliga ega subagentga aylanadi. Claude unga tavsifga mos ishlarni topshiradi, uzun natijalari esa asosiy kontekstingizni to'ldirmaydi.",
+        "ru": "Markdown-файл в .claude/agents/ становится сабагентом со своим промптом, инструментами и моделью. Claude передаёт ему подходящие задачи, а длинный вывод не засоряет основной контекст."
+      }
+    },
+    {
+      "id": "quiz-skill-arguments",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "skills",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/skills",
+      "options": [
+        {
+          "en": "$@",
+          "uz": "$@",
+          "ru": "$@"
+        },
+        {
+          "en": "$ARGUMENTS",
+          "uz": "$ARGUMENTS",
+          "ru": "$ARGUMENTS"
+        },
+        {
+          "en": "{{args}}",
+          "uz": "{{args}}",
+          "ru": "{{args}}"
+        }
+      ],
+      "answer": 1,
+      "title": {
+        "en": "In SKILL.md, what is replaced with the text you type after /skill-name?",
+        "uz": "SKILL.md ichida /skill-nomi dan keyin yozgan matningiz nima bilan almashtiriladi?",
+        "ru": "Что в SKILL.md заменяется текстом, написанным после /имя-скилла?"
+      },
+      "body": {
+        "en": "$ARGUMENTS holds everything after the name. $0, $1 and so on give single arguments.",
+        "uz": "$ARGUMENTS nomdan keyingi hamma narsani saqlaydi. $0, $1 va hokazo alohida argumentlarni beradi.",
+        "ru": "$ARGUMENTS содержит всё после имени. $0, $1 и так далее дают отдельные аргументы."
+      }
+    },
+    {
       "id": "hooks",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "hooks",
       "command": "",
       "tools": [
         "Edit",
@@ -168,6 +439,9 @@
     {
       "id": "skills",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "skills",
       "command": ".claude/skills/<name>/SKILL.md",
       "tools": [],
       "link": "https://code.claude.com/docs/en/skills",
@@ -183,8 +457,72 @@
       }
     },
     {
+      "id": "recipe-skill-arguments",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "skills",
+      "tools": [
+        "Skill"
+      ],
+      "link": "https://code.claude.com/docs/en/skills",
+      "where": ".claude/skills/fix-lint/SKILL.md",
+      "codeLang": "markdown",
+      "code": "---\nname: fix-lint\ndescription: Fix ESLint errors in the given files\nallowed-tools: Bash(npx eslint *), Edit\n---\n\n## Current errors\n!`npx eslint $ARGUMENTS --format compact || true`\n\nFix every error above, then run ESLint again to check.",
+      "title": {
+        "en": "A skill that runs a command before Claude reads it",
+        "uz": "Claude o'qishidan oldin buyruq ishga tushiradigan skill",
+        "ru": "Скилл, который запускает команду до того, как его прочтёт Claude"
+      },
+      "body": {
+        "en": "Lines like !`command` run when the skill starts, and their output is put into the prompt. $ARGUMENTS is replaced with what you type after the name: /fix-lint src/app.js",
+        "uz": "!`buyruq` ko'rinishidagi qatorlar skill ishga tushganda bajariladi va natijasi promptga qo'yiladi. $ARGUMENTS nomdan keyin yozganingiz bilan almashtiriladi: /fix-lint src/app.js",
+        "ru": "Строки вида !`команда` выполняются при запуске скилла, и их вывод подставляется в промпт. $ARGUMENTS заменяется тем, что вы напишете после имени: /fix-lint src/app.js"
+      }
+    },
+    {
+      "id": "quiz-mcp-scope",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "mcp",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/mcp",
+      "options": [
+        {
+          "en": "--scope project",
+          "uz": "--scope project",
+          "ru": "--scope project"
+        },
+        {
+          "en": "--shared",
+          "uz": "--shared",
+          "ru": "--shared"
+        },
+        {
+          "en": "--global",
+          "uz": "--global",
+          "ru": "--global"
+        }
+      ],
+      "answer": 0,
+      "title": {
+        "en": "Which option of claude mcp add saves the server to .mcp.json for the whole team?",
+        "uz": "claude mcp add'ning qaysi opsiyasi serverni butun jamoa uchun .mcp.json ga saqlaydi?",
+        "ru": "Какая опция claude mcp add сохраняет сервер в .mcp.json для всей команды?"
+      },
+      "body": {
+        "en": "--scope project writes to .mcp.json in the repo. The default, local, keeps the server only for you in this project.",
+        "uz": "--scope project repodagi .mcp.json ga yozadi. Standart local esa serverni shu loyihada faqat siz uchun saqlaydi.",
+        "ru": "--scope project пишет в .mcp.json в репозитории. По умолчанию (local) сервер доступен только вам в этом проекте."
+      }
+    },
+    {
       "id": "plugins",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "plugins",
       "command": "/plugin",
       "tools": [],
       "link": "https://code.claude.com/docs/en/plugins/overview",
@@ -202,6 +540,9 @@
     {
       "id": "subagents",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "agents",
       "command": "/agents",
       "tools": [
         "Agent"
@@ -219,8 +560,70 @@
       }
     },
     {
+      "id": "recipe-project-mcp",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "mcp",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/mcp",
+      "where": ".mcp.json",
+      "codeLang": "json",
+      "code": "{\n  \"mcpServers\": {\n    \"github\": {\n      \"type\": \"http\",\n      \"url\": \"https://api.githubcopilot.com/mcp/\",\n      \"headers\": {\n        \"Authorization\": \"Bearer ${GITHUB_TOKEN}\"\n      }\n    }\n  }\n}",
+      "title": {
+        "en": "Share MCP servers with your team",
+        "uz": "MCP serverlarni jamoa bilan ulashing",
+        "ru": "Делитесь MCP-серверами с командой"
+      },
+      "body": {
+        "en": ".mcp.json in the project root is committed to git, so everyone gets the same servers. ${VAR} reads the token from each person's environment, keep secrets out of the file. Claude asks before using a project server for the first time.",
+        "uz": "Loyiha ildizidagi .mcp.json git'ga qo'shiladi, shuning uchun hamma bir xil serverlarni oladi. ${VAR} tokenni har kimning o'z muhitidan o'qiydi: maxfiy ma'lumotni faylga yozmang. Claude loyiha serveridan birinchi marta foydalanishdan oldin ruxsat so'raydi.",
+        "ru": ".mcp.json в корне проекта коммитится в git, и у всех одинаковые серверы. ${VAR} берёт токен из окружения каждого, секреты в файл не пишите. Перед первым использованием проектного сервера Claude спросит разрешение."
+      }
+    },
+    {
+      "id": "quiz-permission-wildcard",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "permissions",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/permissions",
+      "options": [
+        {
+          "en": "Only \"git\" with no arguments",
+          "uz": "Faqat argumentsiz \"git\"",
+          "ru": "Только \"git\" без аргументов"
+        },
+        {
+          "en": "Any command that starts with \"git \"",
+          "uz": "\"git \" bilan boshlanadigan istalgan buyruq",
+          "ru": "Любая команда, начинающаяся с \"git \""
+        },
+        {
+          "en": "Every Bash command",
+          "uz": "Barcha Bash buyruqlari",
+          "ru": "Любая Bash-команда"
+        }
+      ],
+      "answer": 1,
+      "title": {
+        "en": "What does the rule Bash(git *) match?",
+        "uz": "Bash(git *) qoidasi nimaga mos keladi?",
+        "ru": "Подо что подходит правило Bash(git *)?"
+      },
+      "body": {
+        "en": "* after a space matches any arguments, so git status, git diff and git log all match.",
+        "uz": "Bo'shliqdan keyingi * istalgan argumentga mos keladi: git status, git diff, git log hammasi mos.",
+        "ru": "* после пробела подходит под любые аргументы: git status, git diff и git log подходят все."
+      }
+    },
+    {
       "id": "mcp",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "mcp",
       "command": "claude mcp add --transport http <name> <url>",
       "tools": [],
       "link": "https://code.claude.com/docs/en/mcp",
@@ -238,6 +641,9 @@
     {
       "id": "mention-files",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "shortcuts",
       "command": "@src/app.ts",
       "tools": [
         "Read",
@@ -257,8 +663,72 @@
       }
     },
     {
+      "id": "recipe-permission-rules",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "permissions",
+      "tools": [
+        "Bash"
+      ],
+      "link": "https://code.claude.com/docs/en/permissions",
+      "where": ".claude/settings.json",
+      "codeLang": "json",
+      "code": "{\n  \"permissions\": {\n    \"allow\": [\"Bash(npm test *)\", \"Bash(git diff *)\"],\n    \"ask\": [\"Bash(git push *)\"],\n    \"deny\": [\"Read(./.env)\", \"Read(./secrets/**)\"]\n  }\n}",
+      "title": {
+        "en": "Stop answering the same permission prompt",
+        "uz": "Bir xil ruxsat so'roviga qayta-qayta javob bermang",
+        "ru": "Хватит отвечать на один и тот же запрос"
+      },
+      "body": {
+        "en": "allow runs without asking, ask always asks, deny never runs. deny wins over allow. A * after a space matches any arguments, and ** in a path matches every folder below.",
+        "uz": "allow so'ramasdan bajaradi, ask har doim so'raydi, deny hech qachon bajarmaydi. deny allow'dan ustun. Bo'shliqdan keyingi * istalgan argumentga, yo'ldagi ** esa ichidagi barcha papkalarga mos keladi.",
+        "ru": "allow выполняется без вопросов, ask спрашивает всегда, deny не выполняется никогда. deny важнее allow. * после пробела подходит под любые аргументы, ** в пути под все вложенные папки."
+      }
+    },
+    {
+      "id": "quiz-claude-md-import",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "memory",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/memory",
+      "options": [
+        {
+          "en": "#include docs/rules.md",
+          "uz": "#include docs/rules.md",
+          "ru": "#include docs/rules.md"
+        },
+        {
+          "en": "@docs/rules.md",
+          "uz": "@docs/rules.md",
+          "ru": "@docs/rules.md"
+        },
+        {
+          "en": "!docs/rules.md",
+          "uz": "!docs/rules.md",
+          "ru": "!docs/rules.md"
+        }
+      ],
+      "answer": 1,
+      "title": {
+        "en": "How do you pull another file into CLAUDE.md?",
+        "uz": "CLAUDE.md ichiga boshqa faylni qanday ulaysiz?",
+        "ru": "Как подключить другой файл в CLAUDE.md?"
+      },
+      "body": {
+        "en": "@path imports the file. Imported files can import others too.",
+        "uz": "@yo'l faylni ulaydi. Ulangan fayllar ham o'z navbatida boshqalarni ulashi mumkin.",
+        "ru": "@путь подключает файл. Подключённые файлы тоже могут подключать другие."
+      }
+    },
+    {
       "id": "shell-mode",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "shortcuts",
       "command": "! npm test",
       "tools": [
         "Bash"
@@ -278,6 +748,9 @@
     {
       "id": "rewind",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "shortcuts",
       "command": "Esc Esc",
       "tools": [
         "Edit",
@@ -296,8 +769,70 @@
       }
     },
     {
+      "id": "recipe-claude-md-imports",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "memory",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/memory",
+      "where": "CLAUDE.md",
+      "codeLang": "markdown",
+      "code": "# Project\n\nOverview: @README.md\nScripts: @package.json\n\n# Rules\n\n@docs/coding-standards.md\n@~/.claude/my-preferences.md",
+      "title": {
+        "en": "Import other files into CLAUDE.md",
+        "uz": "CLAUDE.md ichiga boshqa fayllarni ulash",
+        "ru": "Подключайте другие файлы в CLAUDE.md"
+      },
+      "body": {
+        "en": "@path pulls a file into CLAUDE.md, so you do not copy the README or rules twice. Paths are relative to the CLAUDE.md file, and @~/ can bring in your personal notes without committing them.",
+        "uz": "@yo'l faylni CLAUDE.md ichiga qo'shadi, shuning uchun README yoki qoidalarni ikki marta ko'chirish shart emas. Yo'llar CLAUDE.md joylashgan papkadan hisoblanadi, @~/ esa shaxsiy eslatmalaringizni commit qilmasdan ulaydi.",
+        "ru": "@путь подключает файл в CLAUDE.md, не нужно копировать README или правила дважды. Пути считаются от папки CLAUDE.md, а @~/ подключает личные заметки без коммита."
+      }
+    },
+    {
+      "id": "quiz-worktree-flag",
+      "date": "2026-09-25",
+      "kind": "quiz",
+      "level": "advanced",
+      "category": "workflow",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/common-workflows",
+      "options": [
+        {
+          "en": "claude --isolated",
+          "uz": "claude --isolated",
+          "ru": "claude --isolated"
+        },
+        {
+          "en": "claude --worktree name",
+          "uz": "claude --worktree name",
+          "ru": "claude --worktree name"
+        },
+        {
+          "en": "claude --fork name",
+          "uz": "claude --fork name",
+          "ru": "claude --fork name"
+        }
+      ],
+      "answer": 1,
+      "title": {
+        "en": "Which command starts a session in its own git worktree?",
+        "uz": "Qaysi buyruq sessiyani alohida git worktree'da boshlaydi?",
+        "ru": "Какая команда запускает сессию в отдельном git worktree?"
+      },
+      "body": {
+        "en": "--worktree creates a separate checkout with its own branch, so parallel sessions do not overwrite each other.",
+        "uz": "--worktree o'z branch'iga ega alohida nusxa yaratadi, shuning uchun parallel sessiyalar bir-birining ishini buzmaydi.",
+        "ru": "--worktree создаёт отдельную копию со своей веткой, и параллельные сессии не перезаписывают друг друга."
+      }
+    },
+    {
       "id": "switch-model",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "shortcuts",
       "command": "/model",
       "tools": [],
       "link": "https://code.claude.com/docs/en/interactive-mode",
@@ -315,6 +850,9 @@
     {
       "id": "context-usage",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "/context",
       "tools": [],
       "link": "https://code.claude.com/docs/en/context-window",
@@ -330,8 +868,33 @@
       }
     },
     {
+      "id": "recipe-headless-json",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "automation",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/headless",
+      "where": "terminal / CI",
+      "codeLang": "bash",
+      "code": "claude -p \"List every TODO in src/ as a short list\" \\\n  --output-format json \\\n  --allowedTools \"Read,Grep,Glob\" \\\n  --max-turns 5 | jq -r '.result'",
+      "title": {
+        "en": "Use Claude in scripts and CI",
+        "uz": "Claude'ni skript va CI ichida ishlatish",
+        "ru": "Claude в скриптах и CI"
+      },
+      "body": {
+        "en": "claude -p runs one task without the interactive screen. JSON output also gives the session id and cost, --allowedTools limits what it may touch and --max-turns stops runaway loops.",
+        "uz": "claude -p bitta vazifani interaktiv oynasiz bajaradi. JSON natija sessiya id va narxini ham beradi, --allowedTools nimaga tegishi mumkinligini cheklaydi, --max-turns esa cheksiz aylanishni to'xtatadi.",
+        "ru": "claude -p выполняет одну задачу без интерактивного экрана. JSON-вывод даёт ещё id сессии и стоимость, --allowedTools ограничивает доступ, --max-turns не даёт зациклиться."
+      }
+    },
+    {
       "id": "headless",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "automation",
       "command": "claude -p \"your prompt\" --output-format json",
       "tools": [],
       "link": "https://code.claude.com/docs/en/headless",
@@ -349,6 +912,9 @@
     {
       "id": "output-style",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "workflow",
       "command": "/output-style concise",
       "tools": [],
       "link": "https://code.claude.com/docs/en/output-styles",
@@ -364,8 +930,33 @@
       }
     },
     {
+      "id": "recipe-add-dir",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "workflow",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/cli-reference",
+      "where": "terminal",
+      "codeLang": "bash",
+      "code": "# start with two more folders\nclaude --add-dir ../api --add-dir ../shared-types\n\n# or add one while working\n/add-dir ../api",
+      "title": {
+        "en": "Work across several repos at once",
+        "uz": "Bir vaqtda bir nechta repo bilan ishlash",
+        "ru": "Работайте сразу с несколькими репозиториями"
+      },
+      "body": {
+        "en": "--add-dir lets Claude read and edit folders outside the one you started in, for example a frontend and its API side by side. Use /add-dir to add one in the middle of a session.",
+        "uz": "--add-dir Claude'ga siz boshlagan papkadan tashqaridagi papkalarni ham o'qish va o'zgartirish imkonini beradi, masalan frontend va uning API'si yonma-yon. Sessiya o'rtasida /add-dir bilan qo'shing.",
+        "ru": "--add-dir даёт Claude доступ к папкам вне стартовой, например фронтенд и его API рядом. В середине сессии используйте /add-dir."
+      }
+    },
+    {
       "id": "background-command",
       "date": "2026-09-25",
+      "kind": "tip",
+      "level": "beginner",
+      "category": "shortcuts",
       "command": "ctrl+b",
       "tools": [
         "Bash"
@@ -380,6 +971,94 @@
         "en": "While Claude runs a long Bash command, press Ctrl+B to move it to the background and keep working. In tmux, press Ctrl+B twice.",
         "uz": "Claude uzoq davom etadigan Bash buyrug'ini bajarayotganda, Ctrl+B bosib uni fonga o'tkazing va ishni davom ettiring. tmux'da Ctrl+B ni ikki marta bosing.",
         "ru": "Пока Claude выполняет долгую Bash-команду, нажмите Ctrl+B, чтобы перевести её в фон и продолжить работу. В tmux нажмите Ctrl+B дважды."
+      }
+    },
+    {
+      "id": "recipe-status-line",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "automation",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/statusline",
+      "where": "~/.claude/statusline.sh",
+      "codeLang": "bash",
+      "code": "#!/bin/bash\n# settings.json: \"statusLine\": { \"type\": \"command\", \"command\": \"~/.claude/statusline.sh\" }\ninput=$(cat)\nmodel=$(echo \"$input\" | jq -r '.model.display_name')\ndir=$(echo \"$input\" | jq -r '.workspace.current_dir')\nbranch=$(git -C \"$dir\" branch --show-current 2>/dev/null)\necho \"[$model] ${dir##*/} ${branch:+on $branch}\"",
+      "title": {
+        "en": "Your own status line under the prompt",
+        "uz": "Prompt ostida o'zingizning status qatoringiz",
+        "ru": "Своя строка статуса под полем ввода"
+      },
+      "body": {
+        "en": "Claude Code sends the session state as JSON to your script and shows whatever it prints. Show the model, folder, git branch or anything else. Or just run /statusline and describe what you want.",
+        "uz": "Claude Code sessiya holatini JSON ko'rinishida skriptingizga yuboradi va u chiqargan narsani ko'rsatadi. Model, papka, git branch yoki boshqa narsani chiqaring. Yoki shunchaki /statusline yozib, nima kerakligini ayting.",
+        "ru": "Claude Code передаёт состояние сессии в ваш скрипт как JSON и показывает то, что он напечатает: модель, папку, ветку git и что угодно ещё. Или просто запустите /statusline и опишите, что нужно."
+      }
+    },
+    {
+      "id": "recipe-output-style",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "workflow",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/output-styles",
+      "where": ".claude/output-styles/teacher.md",
+      "codeLang": "markdown",
+      "code": "---\nname: Teacher\ndescription: Explains each change so I can learn from it\nkeep-coding-instructions: true\n---\n\nAfter each change, explain in two or three sentences why\nit works. Point out one thing I could learn from it.",
+      "title": {
+        "en": "Write your own output style",
+        "uz": "O'zingizning javob uslubingizni yozing",
+        "ru": "Напишите свой стиль ответов"
+      },
+      "body": {
+        "en": "An output style changes how Claude talks for the whole session. keep-coding-instructions: true keeps its normal coding rules and only adds yours. Pick it with /config.",
+        "uz": "Output style butun sessiya davomida Claude qanday gapirishini o'zgartiradi. keep-coding-instructions: true uning odatiy kod yozish qoidalarini saqlaydi va faqat siznikini qo'shadi. /config orqali tanlang.",
+        "ru": "Стиль ответов меняет манеру Claude на всю сессию. keep-coding-instructions: true сохраняет его обычные правила для кода и лишь добавляет ваши. Выберите стиль в /config."
+      }
+    },
+    {
+      "id": "recipe-worktrees",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "workflow",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/common-workflows",
+      "where": "terminal (git repo)",
+      "codeLang": "bash",
+      "code": "# terminal 1\nclaude --worktree feature-auth\n\n# terminal 2, at the same time\nclaude --worktree fix-login-bug",
+      "title": {
+        "en": "Run two Claudes on one repo without conflicts",
+        "uz": "Bitta repoda ikkita Claude'ni to'qnashuvsiz ishlatish",
+        "ru": "Два Claude в одном репозитории без конфликтов"
+      },
+      "body": {
+        "en": "--worktree gives each session its own git worktree: a separate folder and branch. One Claude builds a feature while another fixes a bug, and their edits never touch each other.",
+        "uz": "--worktree har bir sessiyaga alohida git worktree beradi: alohida papka va branch. Bitta Claude yangi funksiya qiladi, ikkinchisi xatoni tuzatadi, o'zgarishlari esa bir-biriga tegmaydi.",
+        "ru": "--worktree даёт каждой сессии свой git worktree: отдельную папку и ветку. Один Claude делает фичу, другой чинит баг, и правки не пересекаются."
+      }
+    },
+    {
+      "id": "recipe-plugin-marketplace",
+      "date": "2026-09-25",
+      "kind": "recipe",
+      "level": "advanced",
+      "category": "plugins",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/plugins",
+      "where": "Claude Code",
+      "codeLang": "bash",
+      "code": "/plugin marketplace add IRMuhammadjon/typing-race-for-claude-code\n/plugin install zerikma@zerikma\n\n# see what is installed\n/plugin",
+      "title": {
+        "en": "Install plugins from any GitHub repo",
+        "uz": "Istalgan GitHub repodan plagin o'rnatish",
+        "ru": "Ставьте плагины из любого GitHub-репозитория"
+      },
+      "body": {
+        "en": "A marketplace is a repo with .claude-plugin/marketplace.json. Add it once, then install plugins as name@marketplace. This example installs Zerikma itself, so /zerikma opens the games.",
+        "uz": "Marketplace bu .claude-plugin/marketplace.json fayli bor repo. Uni bir marta qo'shing, keyin plaginlarni nom@marketplace ko'rinishida o'rnating. Bu misol Zerikma'ning o'zini o'rnatadi, keyin /zerikma o'yinlarni ochadi.",
+        "ru": "Маркетплейс это репозиторий с .claude-plugin/marketplace.json. Добавьте его один раз и ставьте плагины как имя@маркетплейс. Пример ставит сам Zerikma, после чего /zerikma открывает игры."
       }
     }
   ]

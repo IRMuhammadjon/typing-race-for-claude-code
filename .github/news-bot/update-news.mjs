@@ -36,10 +36,15 @@ For each tip:
 - slug: 2 to 5 lowercase words joined by hyphens.
 - command: the exact command, shortcut, flag or setting name from the notes, or "" if there is none.
 - tools: the Claude Code tools this tip relates to, from the allowed list, or [].
+- category: the closest topic from the allowed list.
+- level: "beginner" if anyone can try it in a minute, "advanced" if it needs config files, scripts or several steps.
 - title: at most 7 words.
 - body: at most 2 short sentences, second person, saying what it does and when it helps.
 
 Write title and body in three languages: English (en), Uzbek in Latin script (uz) and Russian (ru). In Uzbek use the apostrophe ' in o', g' and similar letters. Keep command names, flags, keys and setting names exactly as in the notes in every language. Use only facts from the notes; do not invent behavior. Do not repeat a topic from the existing tip ids.`;
+
+// Yangiliklar tabidagi mavzular (media/games/news.js dagi CATS bilan bir xil)
+const CATEGORIES = ['workflow', 'shortcuts', 'memory', 'hooks', 'agents', 'skills', 'mcp', 'permissions', 'automation', 'plugins'];
 
 const LANG_TEXT = {
   type: 'object',
@@ -57,12 +62,14 @@ const SCHEMA = {
       items: {
         type: 'object',
         additionalProperties: false,
-        required: ['version', 'slug', 'command', 'tools', 'title', 'body'],
+        required: ['version', 'slug', 'command', 'tools', 'category', 'level', 'title', 'body'],
         properties: {
           version: { type: 'string' },
           slug: { type: 'string' },
           command: { type: 'string' },
           tools: { type: 'array', items: { type: 'string', enum: TOOLS } },
+          category: { type: 'string', enum: CATEGORIES },
+          level: { type: 'string', enum: ['beginner', 'advanced'] },
           title: LANG_TEXT,
           body: LANG_TEXT,
         },
@@ -129,6 +136,9 @@ function toFeedItems(result, knownIds, versions) {
     const item = {
       id,
       date: today,
+      kind: 'tip',
+      level: tip.level === 'advanced' ? 'advanced' : 'beginner',
+      category: CATEGORIES.includes(tip.category) ? tip.category : 'workflow',
       source: 'changelog',
       version: tip.version,
       command: tip.command || '',

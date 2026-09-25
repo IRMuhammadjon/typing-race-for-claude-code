@@ -32,7 +32,15 @@ function validItem(item) {
     item.body &&
     isText(item.title.en) &&
     isText(item.body.en) &&
-    (!item.link || /^https:\/\//.test(item.link))
+    (!item.link || /^https:\/\//.test(item.link)) &&
+    (item.code === undefined || typeof item.code === 'string') &&
+    (item.kind !== 'quiz' ||
+      (Array.isArray(item.options) &&
+        item.options.length >= 2 &&
+        item.options.every((o) => o && isText(o.en)) &&
+        Number.isInteger(item.answer) &&
+        item.answer >= 0 &&
+        item.answer < item.options.length))
   );
 }
 

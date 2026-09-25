@@ -38,7 +38,7 @@ Install the plugin once, then type `/zerikma` in any Claude Code session:
 
 ## News tab
 
-The first tab shows short Claude Code tips in English, Uzbek or Russian, with the exact command and a docs link. `←` `→` to browse, `o` to open the docs, `r` to jump to a tip related to what Claude is doing right now. New tips are fetched from GitHub at most every 6 hours; run `zerikma --offline` to skip that.
+The first tab teaches Claude Code in English, Uzbek or Russian: 💡 tips with the exact command, 🧪 recipes with ready-to-paste configs (hooks, subagents, skills, MCP, permissions…) and 🧠 quiz questions. `←` `→` to browse, `f` / `g` to filter by level and topic, `c` to copy a recipe, `1` `2` `3` to answer a quiz, `o` to open the docs, `r` to jump to a tip related to what Claude is doing right now. New tips are fetched from GitHub at most every 6 hours; run `zerikma --offline` to skip that.
 
 ## Games
 

@@ -185,6 +185,7 @@ function openPanel(context, preserveFocus) {
         strict: config.get('strictMode'),
         lastSnoozeAt: context.globalState.get('lastSnoozeAt', 0),
         newsRead: context.globalState.get('newsRead', []),
+        newsQuiz: context.globalState.get('newsQuiz', {}),
       });
       post({ type: 'news', items: newsItems });
       refreshNews();
@@ -198,6 +199,11 @@ function openPanel(context, preserveFocus) {
     } else if (m.type === 'newsRead' && typeof m.id === 'string') {
       const read = context.globalState.get('newsRead', []);
       if (!read.includes(m.id)) context.globalState.update('newsRead', [...read, m.id].slice(-500));
+    } else if (m.type === 'quizAnswer' && typeof m.id === 'string' && Number.isInteger(m.choice)) {
+      const quiz = context.globalState.get('newsQuiz', {});
+      if (quiz[m.id] === undefined) context.globalState.update('newsQuiz', { ...quiz, [m.id]: m.choice });
+    } else if (m.type === 'copy' && typeof m.text === 'string') {
+      vscode.env.clipboard.writeText(m.text);
     } else if (m.type === 'openLink' && String(m.url || '').startsWith('https://')) {
       // Faqat https havolalar (maslahatlardagi rasmiy hujjatlar) tashqi brauzerda ochiladi
       vscode.env.openExternal(vscode.Uri.parse(m.url));
