@@ -65,6 +65,6 @@ Options: `zerikma news`, `zerikma 2048`, `zerikma bug`, `zerikma --lang uz`, `ze
 
 ## Privacy
 
-Everything runs locally. Zerikma reads only the last few KB of Claude Code session files in `~/.claude/projects`, to see whether a session is working or done. Nothing is sent anywhere.
+Everything runs locally. Zerikma reads only the last few KB of Claude Code session files in `~/.claude/projects`, to see whether a session is working or done. The only network request downloads the public tips file from GitHub, at most every 6 hours (`--offline` skips it); nothing about you is sent.
 
 Not affiliated with Anthropic. Made by [Muhammadjon Rahmatullayev](https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/). MIT License.
