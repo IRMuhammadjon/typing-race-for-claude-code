@@ -42,6 +42,10 @@ Install the plugin once, then type `/zerikma` in any Claude Code session:
 - **2048**: the classic, in calm serika colors
 - **Bug Smash**: breakout where the bricks are bugs (`null`, `TODO`, `NaN`…) and the power-ups are Claude tools: Grep, Bash, Read, Plan, Ultrathink… and Rate limit, which shrinks your paddle. In terminals that support it, the mouse moves the paddle too.
 
+## Work first, then play
+
+When Claude finishes you get 10 seconds to finish your round, then the game locks until you reply to Claude. A timer shows how long Claude has been waiting, and in tmux and Windows Terminal the cursor jumps back to Claude's pane. Reply within 30 seconds for a ⚡ quick-reply streak. `ctrl+t` gives you 2 more minutes, once an hour. Run `zerikma --gentle` to only pause instead.
+
 ## Keys
 
 | Key | Action |
@@ -50,6 +54,7 @@ Install the plugin once, then type `/zerikma` in any Claude Code session:
 | `tab` | restart |
 | `esc` / `enter` | pause / resume |
 | `ctrl+l` | language: English, O'zbekcha, Русский |
+| `ctrl+t` | 2 more minutes when the game is locked (once an hour) |
 | `ctrl+c` | quit |
 
 Options: `zerikma 2048`, `zerikma bug`, `zerikma --lang uz`.

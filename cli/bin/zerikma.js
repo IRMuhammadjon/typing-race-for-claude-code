@@ -12,7 +12,8 @@ const flag = (name) => {
   return i >= 0 ? args[i + 1] : undefined;
 };
 // "zerikma 2048" yoki "/zerikma bug": o'yin nomini bayroqsiz ham yozish mumkin
-const positional = args.filter((a, i) => !a.startsWith('-') && !(i > 0 && args[i - 1].startsWith('--')) && a !== 'open');
+const VALUE_FLAGS = ['--lang', '--game', '--return-pane'];
+const positional = args.filter((a, i) => !a.startsWith('-') && !VALUE_FLAGS.includes(args[i - 1]) && a !== 'open');
 
 if (args.includes('--help') || args.includes('-h')) {
   console.log(`zerikma ${pkg.version}: mini games while Claude Code works
@@ -22,6 +23,7 @@ Usage:
   zerikma open         open the games in a new pane/window next to Claude
   zerikma [NAME]       start with: typing | 2048 | bug
   zerikma --lang LANG  en | uz | ru
+  zerikma --gentle     only pause when Claude is done (default: lock until you reply)
 
 Keys: ctrl+n next game · tab restart · esc pause · ctrl+l language · ctrl+c quit`);
   process.exit(0);
@@ -46,12 +48,28 @@ const { createApp } = require('../src/app');
 const shared = require('../src/shared');
 const { createWatcher } = shared('claude-watch');
 
+const { spawn } = require('child_process');
+
+// O'yin qulflanganda kursorni Claude turgan panelga qaytaradi (`zerikma open` bu bayroqlarni o'zi qo'shadi)
+function returnFocus() {
+  const run = (cmd, argv) => {
+    const child = spawn(cmd, argv, { detached: true, stdio: 'ignore' });
+    child.on('error', () => {});
+    child.unref();
+  };
+  const pane = flag('return-pane');
+  if (pane) run('tmux', ['select-pane', '-t', pane]);
+  else if (args.includes('--return-wt')) run('wt.exe', ['-w', '0', 'move-focus', 'left']);
+}
+
 const term = createTerminal();
 const app = createApp({
   term,
   gameFactories: [require('../src/games/typing'), require('../src/games/g2048'), require('../src/games/breakout')],
   lang: flag('lang'),
   game: flag('game') || positional[0],
+  strict: !args.includes('--gentle'),
+  returnFocus,
 });
 
 let watcher = null;

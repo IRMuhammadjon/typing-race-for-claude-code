@@ -53,6 +53,17 @@ You can also open them at any time from the **Zerikma** button in the status bar
 
 In every game, `tab` restarts, `esc` pauses and `enter` resumes. Bug Smash pauses automatically when you click away.
 
+## Work first, then play
+
+Zerikma is for the waiting time, not instead of your work:
+
+1. **Claude finishes:** you get **10 seconds** to finish your round.
+2. **Then the game locks.** `Enter` no longer resumes it, and a timer shows how long Claude has been waiting: *"🔒 claude is waiting for you · 1:24"*. After a minute the panel turns amber. In VS Code, the cursor jumps to the Claude input box.
+3. **Reply to Claude:** the game unlocks by itself as soon as Claude starts working again.
+4. **Reply within 30 seconds** and you get a **⚡ quick reply** bonus and a streak.
+
+Need a real break? `Shift+Enter` (`ctrl+t` in the terminal) gives you **2 more minutes, once an hour**. If you'd rather have the game only pause, turn off `typingRace.strictMode` (or run `zerikma --gentle`).
+
 ## Working in the terminal? `/zerikma`
 
 Zerikma also runs in the terminal, with the same three games and the same "Claude is done" alerts.
@@ -77,6 +88,8 @@ Claude Code doesn't record in its session files when it's waiting for your permi
 | Setting | Default | Description |
 |---|---|---|
 | `typingRace.autoOpen` | `true` | Open the game automatically when Claude starts working |
+| `typingRace.strictMode` | `true` | Lock the game after Claude finishes until you reply |
+| `typingRace.focusClaude` | `true` | Move the cursor to the Claude input box when the game locks |
 
 ## Privacy
 

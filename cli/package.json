@@ -1,6 +1,6 @@
 {
   "name": "zerikma",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Mini games in your terminal while Claude Code works: typing race, 2048 and Bug Smash. Tells you the moment Claude is done.",
   "bin": {
     "zerikma": "bin/zerikma.js"
@@ -13,7 +13,8 @@
     "LICENSE"
   ],
   "scripts": {
-    "prepack": "node scripts/sync-shared.js"
+    "prepack": "node scripts/sync-shared.js",
+    "postpack": "node scripts/sync-shared.js --clean"
   },
   "engines": {
     "node": ">=18"

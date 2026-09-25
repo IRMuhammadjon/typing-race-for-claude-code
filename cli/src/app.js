@@ -7,6 +7,7 @@ const { Screen } = require('./term');
 
 const I18N = shared('i18n');
 const { claudeBanner, quote } = shared('banner');
+const { createGuard, clock } = shared('guard');
 const { CLAUDE_DIR } = shared('claude-watch');
 
 const LANGS = Object.keys(I18N);
@@ -60,7 +61,10 @@ function detectLang() {
   return 'en';
 }
 
-function createApp({ term, gameFactories, lang, game }) {
+// Terminallarning ko'pchiligi Shift+Enter ni Enter dan ajratmaydi, shuning uchun qo'shimcha vaqt Ctrl+T da
+const SNOOZE_KEY = 'ctrl+t';
+
+function createApp({ term, gameFactories, lang, game, strict = true, returnFocus = () => {} }) {
   const store = loadStore();
   const app = {
     colors: { ...COLORS },
@@ -82,6 +86,9 @@ function createApp({ term, gameFactories, lang, game }) {
   let wasActive = false;
   let loop = null;
   let slowLoop = null;
+  // "Avval ish, keyin o'yin": Claude tugagach qisqa muhlatdan keyin o'yin qulflanadi
+  const guard = createGuard({ strict, lastSnoozeAt: store.lastSnoozeAt || 0 });
+  let lastPhase = 'free';
 
   const current = () => app.games[app.active];
   const pauseText = () => [app.T.pause, app.T.pauseSub];
@@ -122,7 +129,13 @@ function createApp({ term, gameFactories, lang, game }) {
     term.mouse(Boolean(g.mouse) && app.state[g.id] === 'playing');
   }
 
+  const lockText = () => [
+    app.T.lockTitle(clock(guard.waitingMs())),
+    `${app.T.lockSub(quote(guard.oldest()))} · ${app.T.lockHint(SNOOZE_KEY)}`,
+  ];
+
   app.start = () => {
+    if (guard.phase() === 'locked') return app.toast(app.T.lockedToast);
     const g = current();
     app.state[g.id] = 'playing';
     overlayFn = null;
@@ -156,6 +169,7 @@ function createApp({ term, gameFactories, lang, game }) {
   };
 
   app.restart = () => {
+    if (guard.phase() === 'locked') return app.toast(app.T.lockedToast);
     current().reset();
     app.start();
   };
@@ -192,36 +206,78 @@ function createApp({ term, gameFactories, lang, game }) {
   // ---------- Claude holati ----------
 
   function terminalTitle() {
+    if (guard.phase() === 'locked') return term.title(app.T.panelLocked(clock(guard.waitingMs())));
     const b = banner();
     term.title(`zerikma · ${b.title.replace(/^[^\p{L}«]+/u, '')}`);
   }
 
   function banner() {
+    const T = app.T;
     if (claude.sessions.some((s) => s.status === 'busy')) wasActive = true;
-    return claudeBanner(app.T, claude.sessions, finishedNotice, wasActive);
+    const phase = guard.phase();
+    const who = guard.oldest();
+    if (phase === 'grace') return { view: 'done', title: T.graceTitle(quote(who), guard.graceLeft()), sub: T.graceSub };
+    if (phase === 'locked') {
+      // Bir daqiqadan ko'p kutsa, fon sariq rangga o'tadi
+      return { view: guard.urgent() ? 'waiting' : 'done', title: T.lockTitle(clock(guard.waitingMs())), sub: T.lockSub(quote(who)) };
+    }
+    if (phase === 'snoozed') return { view: 'busy', title: T.snoozedTitle(clock(guard.snoozeLeftMs())), sub: T.snoozedSub(quote(who)) };
+    return claudeBanner(T, claude.sessions, finishedNotice, wasActive);
   }
 
   app.onClaude = (state) => {
     claude = state;
+    // Foydalanuvchi Claude'ga javob yozdi: tez bo'lsa mukofot, qulf ochiladi
+    const answered = guard.update(state.sessions);
+    for (const a of answered) if (a.fast) app.toast(app.T.fastReply(Math.round(a.ms / 1000), a.streak));
+    if (answered.length) finishedNotice = null;
+    if (guard.phase() === 'free' && overlayFn === lockText) overlayFn = pauseText;
     terminalTitle();
     render();
   };
 
-  // Bitta sessiya tugadi: o'yin to'xtaydi, terminal "ding" qiladi va nomi bilan aytiladi
+  // Bitta sessiya tugadi: terminal "ding" qiladi va nomi bilan aytiladi; qat'iy rejimda muhlatdan keyin qulf
   app.onFinished = (session) => {
     wasActive = true;
     finishedNotice = session;
+    guard.finished(session);
     term.bell();
     terminalTitle();
-    app.pause(() => [app.T.finished(quote(session)), app.T.finishedOverlaySub]);
+    if (!guard.strict) app.pause(() => [app.T.finished(quote(session)), app.T.finishedOverlaySub]);
     render();
   };
 
   app.onWaiting = (session) => {
+    guard.finished(session);
     term.bell();
-    app.pause(() => [app.T.waiting(quote(session)), app.T.waitingOverlaySub]);
+    if (!guard.strict) app.pause(() => [app.T.waiting(quote(session)), app.T.waitingOverlaySub]);
     render();
   };
+
+  function snooze() {
+    if (guard.snooze()) {
+      store.lastSnoozeAt = guard.lastSnoozeAt;
+      saveStore(store);
+      if (app.state[current().id] !== 'ready') app.start();
+      else overlayFn = null;
+    } else {
+      app.toast(app.T.snoozeUsed(Math.ceil(guard.nextSnoozeMs() / 60000)));
+    }
+    render();
+  }
+
+  // Muhlat sanog'i, qulf va taymer (sekin sikldan chaqiriladi)
+  function checkGuard() {
+    const phase = guard.phase();
+    if (phase === 'locked') {
+      const st = app.state[current().id];
+      if (overlayFn !== lockText && (st === 'playing' || st === 'paused')) app.pause(lockText);
+      // Qulf tushganda kursor Claude paneliga qaytadi (tmux / Windows Terminal)
+      if (lastPhase !== 'locked') returnFocus();
+    }
+    if (phase !== lastPhase || phase === 'locked') terminalTitle();
+    lastPhase = phase;
+  }
 
   // ---------- Klaviatura ----------
 
@@ -230,6 +286,7 @@ function createApp({ term, gameFactories, lang, game }) {
     const st = app.state[g.id];
 
     if (k.name === 'ctrl' && k.ch === 'c') return app.quit();
+    if (k.name === 'ctrl' && k.ch === 't' && guard.phase() !== 'free') return snooze();
     if (k.name === 'ctrl' && k.ch === 'n') return switchGame(app.active + 1);
     if (k.name === 'ctrl' && k.ch === 'l') return setLang(LANGS[(LANGS.indexOf(app.lang) + 1) % LANGS.length]);
     if (k.name === 'tab') return app.restart();
@@ -394,6 +451,7 @@ function createApp({ term, gameFactories, lang, game }) {
   // Typing statistikasi, kursor miltillashi va toast'lar uchun sekin yangilanish
   slowLoop = setInterval(() => {
     const g = current();
+    checkGuard();
     if (g.idle) g.idle();
     if (!loop) render();
   }, 200);

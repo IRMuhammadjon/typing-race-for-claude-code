@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.0
+
+- **Work first, then play:** when Claude finishes, you get 10 seconds to finish your round, then the game locks until you reply to Claude
+- A timer shows how long Claude has been waiting (in the panel and in the tab title), and the panel turns amber after a minute
+- The cursor moves to the Claude input box when the game locks (VS Code, tmux, Windows Terminal)
+- ⚡ Quick reply bonus and streak when you answer Claude within 30 seconds
+- `Shift+Enter` (`ctrl+t` in the terminal): 2 more minutes, once an hour
+- New settings: `typingRace.strictMode`, `typingRace.focusClaude`
+
 ## 0.6.0
 
 - New: **terminal version** (`npx zerikma`) with all three games

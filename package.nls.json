@@ -3,5 +3,7 @@
   "command.open": "Open games",
   "command.installHooks": "Install Claude Code hooks (optional, detects permission prompts)",
   "command.uninstallHooks": "Remove Claude Code hooks",
-  "config.autoOpen": "Open the game automatically when Claude starts working"
+  "config.autoOpen": "Open the game automatically when Claude starts working",
+  "config.strictMode": "Work first: after Claude finishes, the game locks (after a 10 second grace period) until you reply to Claude. Turn off to only pause the game.",
+  "config.focusClaude": "Move the cursor to the Claude input box when the game locks"
 }

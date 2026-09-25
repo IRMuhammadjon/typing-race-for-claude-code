@@ -92,6 +92,11 @@
   }
 
   App.start = () => {
+    // "Avval ish, keyin o'yin": qulf paytida o'yin davom etmaydi
+    if (guard.phase() === 'locked') {
+      App.toast(App.T.lockedToast);
+      return;
+    }
     const g = current();
     App.state[g.id] = 'playing';
     hideOverlay();
@@ -119,6 +124,10 @@
   };
 
   App.restart = () => {
+    if (guard.phase() === 'locked') {
+      App.toast(App.T.lockedToast);
+      return;
+    }
     current().reset();
     App.start();
   };
@@ -178,6 +187,11 @@
     const g = current();
     const st = App.state[g.id];
 
+    if (e.key === 'Enter' && e.shiftKey && guard.phase() !== 'free') {
+      e.preventDefault();
+      snooze();
+      return;
+    }
     if (e.key === 'Tab') {
       e.preventDefault();
       App.restart();
@@ -326,22 +340,89 @@
   }
 
   function renderClaude() {
+    const T = App.T;
     renderSessions();
     if (claude.sessions.some((s) => s.status === 'busy')) claudeWasActive = true;
-    const b = window.ZerikmaBanner.claudeBanner(App.T, claude.sessions, finishedNotice, claudeWasActive);
-    showClaude(b.view, b.title, b.sub);
+    const phase = guard.phase();
+    const waitingFor = guard.oldest();
+    if (phase === 'grace') {
+      showClaude('done', T.graceTitle(quote(waitingFor), guard.graceLeft()), T.graceSub);
+    } else if (phase === 'locked') {
+      // Bir daqiqadan ko'p kutsa, panel sariq rangga o'tadi
+      showClaude(guard.urgent() ? 'waiting' : 'done', T.lockTitle(clock(guard.waitingMs())), T.lockSub(quote(waitingFor)));
+    } else if (phase === 'snoozed') {
+      showClaude('busy', T.snoozedTitle(clock(guard.snoozeLeftMs())), T.snoozedSub(quote(waitingFor)));
+    } else {
+      const b = window.ZerikmaBanner.claudeBanner(T, claude.sessions, finishedNotice, claudeWasActive);
+      showClaude(b.view, b.title, b.sub);
+    }
   }
+
+  // ---------- "Avval ish, keyin o'yin" ----------
+
+  const Guard = window.ZerikmaGuard;
+  const clock = Guard.clock;
+  const SNOOZE_KEY = 'shift+enter';
+  let guard = Guard.createGuard({ strict: true });
+  let lastPhase = 'free';
+  let lastPanelTitle = '';
+
+  function lockText() {
+    const T = App.T;
+    return [T.lockTitle(clock(guard.waitingMs())), `${T.lockSub(quote(guard.oldest()))} · ${T.lockHint(SNOOZE_KEY)}`];
+  }
+
+  function snooze() {
+    if (guard.snooze()) {
+      App.post({ type: 'snooze', at: guard.lastSnoozeAt });
+      renderClaude();
+      if (App.state[App.active] !== 'ready') App.start();
+      else hideOverlay();
+    } else {
+      App.toast(App.T.snoozeUsed(Math.ceil(guard.nextSnoozeMs() / 60000)));
+    }
+  }
+
+  // Har chorak soniyada: muhlat sanog'i, qulf va taymer yangilanadi
+  setInterval(() => {
+    const phase = guard.phase();
+    if (phase !== 'free' || lastPhase !== 'free') renderClaude();
+    if (phase === 'locked') {
+      const st = App.state[App.active];
+      if (overlayFn === lockText) showOverlay(lockText);
+      else if (st === 'playing' || st === 'paused') App.pause(lockText);
+      // Qulf tushganda kursor Claude'ning yozish maydoniga qaytariladi
+      if (lastPhase !== 'locked') App.post({ type: 'locked' });
+    }
+    const title = phase === 'locked' ? App.T.panelLocked(clock(guard.waitingMs())) : '';
+    if (title !== lastPanelTitle) {
+      lastPanelTitle = title;
+      App.post({ type: 'title', text: title });
+    }
+    lastPhase = phase;
+  }, 250);
 
   function onFinished(session) {
     claudeWasActive = true;
     finishedNotice = session;
+    guard.finished(session);
     renderClaude();
-    App.pause(() => [App.T.finished(quote(session)), App.T.finishedOverlaySub]);
+    // Yumshoq rejimda: darhol pauza, Enter bilan davom etiladi
+    if (!guard.strict) App.pause(() => [App.T.finished(quote(session)), App.T.finishedOverlaySub]);
   }
 
   function onWaiting(session) {
+    guard.finished(session);
     renderClaude();
-    App.pause(() => [App.T.waiting(quote(session)), App.T.waitingOverlaySub]);
+    if (!guard.strict) App.pause(() => [App.T.waiting(quote(session)), App.T.waitingOverlaySub]);
+  }
+
+  // Foydalanuvchi Claude'ga javob yozdi: tez bo'lsa mukofot, qulf ochiladi
+  function onAnswered(answered) {
+    for (const a of answered) if (a.fast) App.toast(App.T.fastReply(Math.round(a.ms / 1000), a.streak));
+    // Javob yozilgan sessiya endi "tugatdi" deb ko'rsatilmaydi
+    if (answered.length) finishedNotice = null;
+    if (guard.phase() === 'free' && overlayFn === lockText) showOverlay(pauseText);
   }
 
   // O'yin davom etganda "tugatdi" xabari ko'rilgan hisoblanadi
@@ -355,10 +436,12 @@
     const m = e.data;
     if (m.type === 'init') {
       App.best = m.best || {};
+      guard = Guard.createGuard({ strict: m.strict !== false, lastSnoozeAt: m.lastSnoozeAt || 0 });
       for (const id of App.order) if (App.games[id].refresh) App.games[id].refresh();
       if (m.game) switchGame(m.game, false);
     } else if (m.type === 'claude') {
       claude = m;
+      onAnswered(guard.update(m.sessions));
       renderClaude();
     } else if (m.type === 'finished') {
       onFinished(m);

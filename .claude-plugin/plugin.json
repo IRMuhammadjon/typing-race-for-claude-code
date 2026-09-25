@@ -1,7 +1,7 @@
 {
   "name": "zerikma",
   "displayName": "Zerikma",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Type /zerikma to open mini games (typing race, 2048, Bug Smash) next to Claude while it works. They tell you when Claude is done.",
   "author": {
     "name": "Muhammadjon Rahmatullayev",

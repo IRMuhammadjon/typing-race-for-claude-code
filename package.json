@@ -2,7 +2,7 @@
   "name": "typing-race-for-claude-code",
   "displayName": "Zerikma for Claude Code",
   "description": "%description%",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "publisher": "MuhammadjonRahmatullayev",
   "author": {
     "name": "Muhammadjon Rahmatullayev",
@@ -71,6 +71,16 @@
           "type": "boolean",
           "default": true,
           "description": "%config.autoOpen%"
+        },
+        "typingRace.strictMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.strictMode%"
+        },
+        "typingRace.focusClaude": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.focusClaude%"
         }
       }
     }

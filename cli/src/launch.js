@@ -41,7 +41,9 @@ function open({ script, passArgs = [], env = process.env }) {
   }
 
   if (env.TMUX) {
-    const cmd = argv.map(sh).join(' ');
+    // O'yin qulflanganda kursor Claude turgan panelga qaytishi uchun
+    const withReturn = env.TMUX_PANE ? [...argv, '--return-pane', env.TMUX_PANE] : argv;
+    const cmd = withReturn.map(sh).join(' ');
     const r = spawnSync('tmux', ['split-window', '-h', '-l', '45%', cmd]);
     // Eski tmux (< 3.1) foizli -l ni bilmaydi
     if (r.status !== 0) spawnSync('tmux', ['split-window', '-h', '-p', '45', cmd]);
@@ -50,7 +52,8 @@ function open({ script, passArgs = [], env = process.env }) {
 
   if (process.platform === 'win32') {
     if (env.WT_SESSION && has('wt.exe')) {
-      detached('wt.exe', ['-w', '0', 'split-pane', '-V', '--size', '0.45', ...argv]);
+      // Yangi panel o'ngda ochiladi: qulf tushganda fokus chapdagi Claude'ga qaytadi
+      detached('wt.exe', ['-w', '0', 'split-pane', '-V', '--size', '0.45', ...argv, '--return-wt']);
       return report('windows-terminal');
     }
     // "start" birinchi qo'shtirnoqli argumentni sarlavha deb oladi

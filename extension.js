@@ -105,8 +105,8 @@ function activate(context) {
       post(lastPayload);
       updateStatusBar();
     },
-    onFinished: (s) => post({ type: 'finished', title: s.title, project: s.project }),
-    onWaiting: (s) => post({ type: 'waiting', title: s.title, project: s.project }),
+    onFinished: (s) => post({ type: 'finished', id: s.id, title: s.title, project: s.project }),
+    onWaiting: (s) => post({ type: 'waiting', id: s.id, title: s.title, project: s.project }),
   });
 
   const clock = setInterval(updateStatusBar, 1000);
@@ -163,7 +163,14 @@ function openPanel(context, preserveFocus) {
   panel.webview.html = getHtml(panel.webview, root, currentLang());
   panel.webview.onDidReceiveMessage((m) => {
     if (m.type === 'ready') {
-      post({ type: 'init', best: readBests(context), game: context.globalState.get('game') });
+      const config = vscode.workspace.getConfiguration('typingRace');
+      post({
+        type: 'init',
+        best: readBests(context),
+        game: context.globalState.get('game'),
+        strict: config.get('strictMode'),
+        lastSnoozeAt: context.globalState.get('lastSnoozeAt', 0),
+      });
       post(lastPayload);
     } else if (m.type === 'best' && GAMES.includes(m.game)) {
       context.globalState.update('bests', { ...readBests(context), [m.game]: m.value });
@@ -171,6 +178,16 @@ function openPanel(context, preserveFocus) {
       context.globalState.update('game', m.value);
     } else if (m.type === 'lang' && LANGS.includes(m.value)) {
       context.globalState.update('lang', m.value).then(updateStatusBar);
+    } else if (m.type === 'snooze') {
+      context.globalState.update('lastSnoozeAt', m.at);
+    } else if (m.type === 'title') {
+      // Qulf paytida tab sarlavhasida ham taymer ko'rinadi
+      if (panel) panel.title = m.text || '🎮 Zerikma';
+    } else if (m.type === 'locked') {
+      // O'yin qulflandi: kursorni Claude'ning yozish maydoniga qaytaramiz
+      if (vscode.workspace.getConfiguration('typingRace').get('focusClaude')) {
+        vscode.commands.executeCommand('claude-vscode.focus').then(undefined, () => {});
+      }
     } else if (m.type === 'openAuthor') {
       vscode.env.openExternal(vscode.Uri.parse(AUTHOR_URL));
     }
@@ -218,6 +235,7 @@ ${[
   'shared/i18n.js',
   'shared/words.js',
   'shared/banner.js',
+  'shared/guard.js',
   'media/shell.js',
   'media/games/typing.js',
   'media/games/g2048.js',
