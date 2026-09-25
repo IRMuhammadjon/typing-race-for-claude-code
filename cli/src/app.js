@@ -130,7 +130,12 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
   }
 
   // Qo'shimcha vaqt maslahati overlay'ga sig'maydi: u pastdagi tugmalar qatorida ko'rsatiladi
-  const lockText = () => [app.T.lockTitle(clock(guard.waitingMs())), app.T.lockSub(quote(guard.oldest()))];
+  const lockText = () => {
+    const who = guard.oldest();
+    // Qulf ochilib bo'lgan bo'lsa (kutilayotgan sessiya yo'q), oddiy pauza matni
+    if (!who) return pauseText();
+    return [app.T.lockTitle(clock(guard.waitingMs())), app.T.lockSub(quote(who))];
+  };
 
   app.start = () => {
     if (guard.phase() === 'locked') return app.toast(app.T.lockedToast);
@@ -227,9 +232,10 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     claude = state;
     // Foydalanuvchi Claude'ga javob yozdi: tez bo'lsa mukofot, qulf ochiladi
     const answered = guard.update(state.sessions);
-    for (const a of answered) if (a.fast) app.toast(app.T.fastReply(Math.round(a.ms / 1000), a.streak));
+    // Avval qulf oynachasi yopiladi: toast ekranni qayta chizadi, qulf matni esa endi yo'q sessiyani so'raydi
     if (answered.length) finishedNotice = null;
     if (guard.phase() === 'free' && overlayFn === lockText) overlayFn = pauseText;
+    for (const a of answered) if (a.fast) app.toast(app.T.fastReply(Math.round(a.ms / 1000), a.streak));
     terminalTitle();
     render();
   };
