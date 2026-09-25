@@ -1,13 +1,14 @@
 // Interfeys matnlari: en / uz / ru
 const I18N = {
   en: {
-    games: { typing: 'typing', g2048: '2048', breakout: 'bug smash' },
+    games: { news: 'news', typing: 'typing', g2048: '2048', breakout: 'bug smash' },
     levels: ['Very easy', 'Easy', 'Medium', 'Hard', 'camelCase', 'Symbols'],
     stats: { wpm: 'wpm', acc: 'accuracy', streak: 'streak', best: 'best', score: 'score', lives: 'lives', level: 'level' },
     keys: {
       restart: 'restart', pause: 'pause', resume: 'resume', back: 'fix previous word',
       move: 'move', launch: 'launch', mouse: 'mouse works too',
       next: 'next game', quit: 'quit', lang: 'language',
+      prev: 'previous', nextTip: 'next', related: 'related tip', open: 'open docs',
     },
     authorTitle: 'Open LinkedIn profile',
     start: 'start typing to begin',
@@ -57,6 +58,11 @@ const I18N = {
     allDone: '✅ all sessions are done',
     allDoneSub: 'check the answers',
     claude: 'claude',
+    // Yangiliklar tabi
+    newsNew: 'new',
+    newsEmpty: 'no tips yet',
+    newsRelated: (tool) => `related to what claude is doing now (${tool})`,
+    newsChangelog: 'from the Claude Code changelog',
     // "Avval ish, keyin o'yin" qulfi
     lockTitle: (time) => `🔒 claude is waiting for you · ${time}`,
     lockSub: (name) => `${name} is done · reply to Claude and the game unlocks by itself`,
@@ -71,13 +77,14 @@ const I18N = {
     panelLocked: (time) => `🔒 Claude is waiting · ${time}`,
   },
   uz: {
-    games: { typing: 'yozish', g2048: '2048', breakout: 'bug smash' },
+    games: { news: 'yangiliklar', typing: 'yozish', g2048: '2048', breakout: 'bug smash' },
     levels: ['Juda oson', 'Oson', "O'rtacha", 'Qiyin', 'camelCase', 'Belgilar'],
     stats: { wpm: 'wpm', acc: 'aniqlik', streak: 'ketma-ket', best: 'rekord', score: 'ochko', lives: 'jon', level: 'daraja' },
     keys: {
       restart: 'qaytadan', pause: 'pauza', resume: 'davom etish', back: "xato so'zga qaytish",
       move: 'yurish', launch: 'otish', mouse: 'sichqoncha ham ishlaydi',
       next: "keyingi o'yin", quit: 'chiqish', lang: 'til',
+      prev: 'oldingi', nextTip: 'keyingi', related: 'mos maslahat', open: 'hujjatni ochish',
     },
     authorTitle: 'LinkedIn profilini ochish',
     start: 'boshlash uchun yozishni boshlang',
@@ -124,6 +131,11 @@ const I18N = {
     allDone: '✅ hamma sessiyalar tugatdi',
     allDoneSub: "javoblarni ko'ring",
     claude: 'claude',
+    // Yangiliklar tabi
+    newsNew: 'yangi',
+    newsEmpty: "hozircha maslahat yo'q",
+    newsRelated: (tool) => `claude hozir qilayotgan ishga mos (${tool})`,
+    newsChangelog: "Claude Code changelog'idan",
     // "Avval ish, keyin o'yin" qulfi
     lockTitle: (time) => `🔒 claude sizni kutyapti · ${time}`,
     lockSub: (name) => `${name} tugatdi · claude'ga javob yozing, o'yin o'zi ochiladi`,
@@ -138,13 +150,14 @@ const I18N = {
     panelLocked: (time) => `🔒 Claude kutyapti · ${time}`,
   },
   ru: {
-    games: { typing: 'печать', g2048: '2048', breakout: 'bug smash' },
+    games: { news: 'новости', typing: 'печать', g2048: '2048', breakout: 'bug smash' },
     levels: ['Очень легко', 'Легко', 'Средне', 'Сложно', 'camelCase', 'Символы'],
     stats: { wpm: 'wpm', acc: 'точность', streak: 'серия', best: 'рекорд', score: 'очки', lives: 'жизни', level: 'уровень' },
     keys: {
       restart: 'заново', pause: 'пауза', resume: 'продолжить', back: 'исправить слово',
       move: 'движение', launch: 'запуск', mouse: 'мышь тоже работает',
       next: 'следующая игра', quit: 'выход', lang: 'язык',
+      prev: 'назад', nextTip: 'вперёд', related: 'подходящий совет', open: 'открыть документацию',
     },
     authorTitle: 'Открыть профиль LinkedIn',
     start: 'начните печатать',
@@ -191,6 +204,11 @@ const I18N = {
     allDone: '✅ все сессии завершены',
     allDoneSub: 'посмотрите ответы',
     claude: 'claude',
+    // Yangiliklar tabi
+    newsNew: 'новое',
+    newsEmpty: 'пока нет советов',
+    newsRelated: (tool) => `связано с тем, что сейчас делает claude (${tool})`,
+    newsChangelog: 'из changelog Claude Code',
     // "Avval ish, keyin o'yin" qulfi
     lockTitle: (time) => `🔒 claude ждёт вас · ${time}`,
     lockSub: (name) => `${name}: готово · ответьте Claude, и игра откроется сама`,

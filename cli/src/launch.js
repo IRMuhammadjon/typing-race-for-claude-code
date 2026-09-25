@@ -105,4 +105,4 @@ function report(where) {
   return where;
 }
 
-module.exports = { open, inVSCode };
+module.exports = { open, inVSCode, openUrl };

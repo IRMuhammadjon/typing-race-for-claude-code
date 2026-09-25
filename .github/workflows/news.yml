@@ -1,0 +1,64 @@
+# Har kuni Claude Code changelog'ini tekshiradi va yangi maslahatlar bo'lsa Pull Request ochadi.
+# Kerak: repo'da ANTHROPIC_API_KEY secret va "Allow GitHub Actions to create and approve pull requests".
+name: News bot
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: news-bot
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        working-directory: .github/news-bot
+        run: npm install --no-audit --no-fund
+
+      - name: Write tips from new changelog entries
+        id: bot
+        working-directory: .github/news-bot
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node update-news.mjs
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- shared/news-feed.json; then
+            echo "Nothing new"
+            exit 0
+          fi
+          git config user.name "zerikma-news-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Maslahat yo'q, faqat versiya belgisi siljidi: PR shart emas
+          if [ "${{ steps.bot.outputs.tips }}" = "0" ]; then
+            git add shared/news-feed.json
+            git commit -m "News: changelog checked, no new tips"
+            git push
+            exit 0
+          fi
+          branch="news/$(date -u +%Y-%m-%d)"
+          git checkout -b "$branch"
+          git add shared/news-feed.json
+          git commit -m "News: Claude Code tips from the changelog"
+          git push --force -u origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "News: new Claude Code tips ($(date -u +%Y-%m-%d))" \
+            --body-file .github/news-bot/pr-body.md \
+            || echo "A pull request for this branch already exists"

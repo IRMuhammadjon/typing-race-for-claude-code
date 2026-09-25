@@ -6,6 +6,10 @@
 
 ![Zerikma while Claude sessions are working](images/screenshot.png)
 
+## 📰 News: learn Claude Code while you wait
+
+The first tab is a feed of short Claude Code tips in your language (English, O'zbekcha, Русский): `/compact`, plan mode, hooks, skills, subagents, MCP and more, each with the exact command and a link to the official docs. When Claude is using a tool, the tab suggests a related tip (for example, `/permissions` while Claude runs `Bash`). New tips are written from the official Claude Code changelog and reviewed before they ship.
+
 ## Three games
 
 ### ⌨ Typing Race
@@ -90,14 +94,16 @@ Claude Code doesn't record in its session files when it's waiting for your permi
 | `typingRace.autoOpen` | `true` | Open the game automatically when Claude starts working |
 | `typingRace.strictMode` | `true` | Lock the game after Claude finishes until you reply |
 | `typingRace.focusClaude` | `true` | Move the cursor to the Claude input box when the game locks |
+| `typingRace.newsOnline` | `true` | Check GitHub for new tips (at most every 6 hours) |
 
 ## Privacy
 
 Everything stays on your machine. The extension:
 
 - reads only the **last few KB** of Claude Code session files in `~/.claude/projects`, to see whether a session is working or done and what its title is;
-- never sends anything over the network: no telemetry, no analytics, no accounts;
-- stores only your best WPM and chosen language in VS Code's local storage.
+- sends nothing about you anywhere: no telemetry, no analytics, no accounts;
+- stores only your best scores, chosen language and which tips you've read in VS Code's local storage;
+- downloads the public tips file from GitHub (`raw.githubusercontent.com`) at most every 6 hours. No data about you is sent. Turn this off with `typingRace.newsOnline` (or `zerikma --offline`) to use only the tips bundled with the extension.
 
 ## Disclaimer
 

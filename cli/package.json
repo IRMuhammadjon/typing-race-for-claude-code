@@ -1,6 +1,6 @@
 {
   "name": "zerikma",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Mini games in your terminal while Claude Code works: typing race, 2048 and Bug Smash. Tells you the moment Claude is done.",
   "bin": {
     "zerikma": "bin/zerikma.js"

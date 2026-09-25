@@ -36,6 +36,10 @@ Install the plugin once, then type `/zerikma` in any Claude Code session:
 
 `/zerikma 2048` or `/zerikma bug` starts a specific game.
 
+## News tab
+
+The first tab shows short Claude Code tips in English, Uzbek or Russian, with the exact command and a docs link. `←` `→` to browse, `o` to open the docs, `r` to jump to a tip related to what Claude is doing right now. New tips are fetched from GitHub at most every 6 hours; run `zerikma --offline` to skip that.
+
 ## Games
 
 - **Typing Race**: a Monkeytype-style test with programming words, from `if for let` up to `x?.y??z`
@@ -57,7 +61,7 @@ When Claude finishes you get 10 seconds to finish your round, then the game lock
 | `ctrl+t` | 2 more minutes when the game is locked (once an hour) |
 | `ctrl+c` | quit |
 
-Options: `zerikma 2048`, `zerikma bug`, `zerikma --lang uz`.
+Options: `zerikma news`, `zerikma 2048`, `zerikma bug`, `zerikma --lang uz`, `zerikma --offline`.
 
 ## Privacy
 

@@ -21,9 +21,10 @@ if (args.includes('--help') || args.includes('-h')) {
 Usage:
   zerikma              play in this terminal
   zerikma open         open the games in a new pane/window next to Claude
-  zerikma [NAME]       start with: typing | 2048 | bug
+  zerikma [NAME]       start with: news | typing | 2048 | bug
   zerikma --lang LANG  en | uz | ru
   zerikma --gentle     only pause when Claude is done (default: lock until you reply)
+  zerikma --offline    don't check GitHub for new tips
 
 Keys: ctrl+n next game · tab restart · esc pause · ctrl+l language · ctrl+c quit`);
   process.exit(0);
@@ -47,6 +48,8 @@ const { createTerminal } = require('../src/term');
 const { createApp } = require('../src/app');
 const shared = require('../src/shared');
 const { createWatcher } = shared('claude-watch');
+const { loadNews } = shared('news');
+const { openUrl } = require('../src/launch');
 
 const { spawn } = require('child_process');
 
@@ -65,11 +68,17 @@ function returnFocus() {
 const term = createTerminal();
 const app = createApp({
   term,
-  gameFactories: [require('../src/games/typing'), require('../src/games/g2048'), require('../src/games/breakout')],
+  gameFactories: [
+    require('../src/games/news'),
+    require('../src/games/typing'),
+    require('../src/games/g2048'),
+    require('../src/games/breakout'),
+  ],
   lang: flag('lang'),
   game: flag('game') || positional[0],
   strict: !args.includes('--gentle'),
   returnFocus,
+  openUrl,
 });
 
 let watcher = null;
@@ -101,3 +110,5 @@ watcher = createWatcher({
   onWaiting: app.onWaiting,
 });
 app.render();
+// Yangiliklar: ichidagi nusxa darhol, GitHub'dagi yangilangani kelishi bilan (--offline bo'lsa internetsiz)
+loadNews({ online: !args.includes('--offline') }).then(app.setNews, () => {});

@@ -64,7 +64,7 @@ function detectLang() {
 // Terminallarning ko'pchiligi Shift+Enter ni Enter dan ajratmaydi, shuning uchun qo'shimcha vaqt Ctrl+T da
 const SNOOZE_KEY = 'ctrl+t';
 
-function createApp({ term, gameFactories, lang, game, strict = true, returnFocus = () => {} }) {
+function createApp({ term, gameFactories, lang, game, strict = true, returnFocus = () => {}, openUrl = () => {} }) {
   const store = loadStore();
   const app = {
     colors: { ...COLORS },
@@ -75,6 +75,10 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     state: {}, // o'yin id -> ready | playing | paused | over
     best: store.best || {},
     now: () => Date.now(),
+    // Yangiliklar tabi uchun
+    news: [],
+    newsRead: new Set(store.newsRead || []),
+    openUrl,
   };
   app.T = I18N[app.lang];
 
@@ -101,6 +105,18 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     store.best = app.best;
     saveStore(store);
     return true;
+  };
+
+  app.setNews = (items) => {
+    app.news = items;
+    render();
+  };
+
+  app.markNewsRead = (id) => {
+    if (app.newsRead.has(id)) return;
+    app.newsRead.add(id);
+    store.newsRead = [...app.newsRead].slice(-500);
+    saveStore(store);
   };
 
   app.toast = (text) => {
@@ -191,7 +207,13 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
       if (prev.pause) prev.pause();
     }
     app.active = (index + app.games.length) % app.games.length;
-    overlayFn = overlayFor(current());
+    const g = current();
+    if (g.passive && guard.phase() !== 'locked') {
+      app.state[g.id] = 'playing';
+      overlayFn = null;
+    } else {
+      overlayFn = overlayFor(g);
+    }
     store.game = current().id;
     saveStore(store);
     syncLoop();
@@ -228,13 +250,20 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     return claudeBanner(T, claude.sessions, finishedNotice, wasActive);
   }
 
+  app.claudeState = () => claude;
+
   app.onClaude = (state) => {
     claude = state;
     // Foydalanuvchi Claude'ga javob yozdi: tez bo'lsa mukofot, qulf ochiladi
     const answered = guard.update(state.sessions);
     // Avval qulf oynachasi yopiladi: toast ekranni qayta chizadi, qulf matni esa endi yo'q sessiyani so'raydi
     if (answered.length) finishedNotice = null;
-    if (guard.phase() === 'free' && overlayFn === lockText) overlayFn = pauseText;
+    if (guard.phase() === 'free' && overlayFn === lockText) {
+      if (current().passive) {
+        app.state[current().id] = 'playing';
+        overlayFn = null;
+      } else overlayFn = pauseText;
+    }
     for (const a of answered) if (a.fast) app.toast(app.T.fastReply(Math.round(a.ms / 1000), a.streak));
     terminalTitle();
     render();
@@ -318,7 +347,7 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
       if (!(g.startsOn && g.startsOn(k))) return;
       app.start();
     }
-    if (k.name === 'escape') return app.pause(pauseText);
+    if (k.name === 'escape') return g.passive ? undefined : app.pause(pauseText);
     if (g.key(k)) render();
   };
 
@@ -447,13 +476,14 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
 
   app.games = gameFactories.map((f) => f(app));
   for (const g of app.games) {
-    app.state[g.id] = 'ready';
+    // O'yin bo'lmagan tab (yangiliklar) boshlash ekranisiz, darhol ochiq turadi
+    app.state[g.id] = g.passive ? 'playing' : 'ready';
     g.reset();
   }
   const wanted = game || store.game;
   const idx = app.games.findIndex((g) => g.id === wanted || g.aliases?.includes(wanted));
   app.active = idx >= 0 ? idx : 0;
-  overlayFn = current().startText;
+  overlayFn = current().passive ? null : current().startText;
 
   // Typing statistikasi, kursor miltillashi va toast'lar uchun sekin yangilanish
   slowLoop = setInterval(() => {

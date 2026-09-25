@@ -5,6 +5,7 @@ const crypto = require('crypto');
 
 // Claude sessiyalarini kuzatish terminal versiya (npx zerikma) bilan umumiy
 const { createWatcher, CLAUDE_DIR } = require('./shared/claude-watch');
+const { loadNews } = require('./shared/news');
 
 const GAMES_DIR = path.join(CLAUDE_DIR, 'typing-race');
 const HOOK_TARGET = path.join(GAMES_DIR, 'hook.js');
@@ -14,7 +15,7 @@ const HOOK_EVENTS = ['UserPromptSubmit', 'PreToolUse', 'PostToolUse', 'Notificat
 const TOOL_EVENTS = ['PreToolUse', 'PostToolUse'];
 const AUTHOR_URL = 'https://www.linkedin.com/in/muhammadjon-rahmatullayev-b9356a321/';
 const LANGS = ['en', 'uz', 'ru'];
-const GAMES = ['typing', 'g2048', 'breakout'];
+const GAMES = ['news', 'typing', 'g2048', 'breakout'];
 
 // Extension tomonidagi matnlar (o'yin matnlari shared/i18n.js da)
 const STRINGS = {
@@ -73,6 +74,18 @@ let watcher;
 let lastStatus = 'idle';
 let busySince = 0;
 let lastPayload = { type: 'claude', status: 'idle', tool: '', sessions: [] };
+let newsItems = [];
+
+// Yangiliklar: ichidagi nusxa + GitHub'dagi yangilangan fayl (6 soatda bir marta, o'chirsa bo'ladi)
+function refreshNews() {
+  const online = vscode.workspace.getConfiguration('typingRace').get('newsOnline');
+  loadNews({ online })
+    .then((items) => {
+      newsItems = items;
+      post({ type: 'news', items });
+    })
+    .catch(() => {});
+}
 
 function activate(context) {
   extContext = context;
@@ -119,6 +132,7 @@ function activate(context) {
 
   updateStatusBar();
   statusItem.show();
+  refreshNews();
 }
 
 function busyCount() {
@@ -170,7 +184,10 @@ function openPanel(context, preserveFocus) {
         game: context.globalState.get('game'),
         strict: config.get('strictMode'),
         lastSnoozeAt: context.globalState.get('lastSnoozeAt', 0),
+        newsRead: context.globalState.get('newsRead', []),
       });
+      post({ type: 'news', items: newsItems });
+      refreshNews();
       post(lastPayload);
     } else if (m.type === 'best' && GAMES.includes(m.game)) {
       context.globalState.update('bests', { ...readBests(context), [m.game]: m.value });
@@ -178,6 +195,12 @@ function openPanel(context, preserveFocus) {
       context.globalState.update('game', m.value);
     } else if (m.type === 'lang' && LANGS.includes(m.value)) {
       context.globalState.update('lang', m.value).then(updateStatusBar);
+    } else if (m.type === 'newsRead' && typeof m.id === 'string') {
+      const read = context.globalState.get('newsRead', []);
+      if (!read.includes(m.id)) context.globalState.update('newsRead', [...read, m.id].slice(-500));
+    } else if (m.type === 'openLink' && String(m.url || '').startsWith('https://')) {
+      // Faqat https havolalar (maslahatlardagi rasmiy hujjatlar) tashqi brauzerda ochiladi
+      vscode.env.openExternal(vscode.Uri.parse(m.url));
     } else if (m.type === 'snooze') {
       context.globalState.update('lastSnoozeAt', m.at);
     } else if (m.type === 'title') {
@@ -237,6 +260,7 @@ ${[
   'shared/banner.js',
   'shared/guard.js',
   'media/shell.js',
+  'media/games/news.js',
   'media/games/typing.js',
   'media/games/g2048.js',
   'media/games/breakout.js',

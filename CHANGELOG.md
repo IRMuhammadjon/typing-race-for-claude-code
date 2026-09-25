@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+- New first tab: **📰 News**, short Claude Code tips in English, Uzbek and Russian with the exact command and a docs link
+- The news tab suggests a tip related to what Claude is doing right now (press `r`)
+- New tips arrive without an update: they are generated daily from the Claude Code changelog, reviewed, and published on GitHub
+- New setting `typingRace.newsOnline` (terminal: `--offline`)
+
 ## 0.7.2
 
 - The lock now opens when you send a new prompt in any Claude session. Before, resuming a conversation (`--continue`, `/resume`) moved it to a new session and the lock kept waiting for the old one

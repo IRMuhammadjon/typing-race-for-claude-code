@@ -5,5 +5,6 @@
   "command.uninstallHooks": "Remove Claude Code hooks",
   "config.autoOpen": "Open the game automatically when Claude starts working",
   "config.strictMode": "Work first: after Claude finishes, the game locks (after a 10 second grace period) until you reply to Claude. Turn off to only pause the game.",
-  "config.focusClaude": "Move the cursor to the Claude input box when the game locks"
+  "config.focusClaude": "Move the cursor to the Claude input box when the game locks",
+  "config.newsOnline": "Check GitHub for new Claude Code tips (at most every 6 hours). Only the public tips file is downloaded; nothing about you is sent. When off, only the tips bundled with the extension are shown."
 }

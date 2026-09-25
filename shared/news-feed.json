@@ -1,0 +1,386 @@
+{
+  "version": 1,
+  "changelog": {
+    "lastVersion": "2.1.282"
+  },
+  "items": [
+    {
+      "id": "queue-while-working",
+      "date": "2026-09-25",
+      "command": "Enter",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/interactive-mode",
+      "title": {
+        "en": "Queue your next message while Claude works",
+        "uz": "Claude ishlayotganda keyingi xabarni navbatga qo'ying",
+        "ru": "Ставьте сообщения в очередь, пока Claude работает"
+      },
+      "body": {
+        "en": "Type your next message and press Enter while Claude is still working. Claude Code queues it and sends it as soon as the current turn ends.",
+        "uz": "Claude hali ishlayotganda keyingi xabaringizni yozib, Enter bosing. Claude Code uni navbatga qo'yadi va joriy ish tugashi bilan yuboradi.",
+        "ru": "Напишите следующее сообщение и нажмите Enter, пока Claude ещё работает. Claude Code поставит его в очередь и отправит, как только текущий ход закончится."
+      }
+    },
+    {
+      "id": "resume-conversation",
+      "date": "2026-09-25",
+      "command": "claude --continue",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/sessions",
+      "title": {
+        "en": "Pick up where you left off",
+        "uz": "To'xtagan joyingizdan davom eting",
+        "ru": "Продолжайте с того же места"
+      },
+      "body": {
+        "en": "claude --continue reopens the most recent conversation in the current folder with its full history. Inside a session, /resume lets you choose any earlier conversation.",
+        "uz": "claude --continue joriy papkadagi oxirgi suhbatni butun tarixi bilan qayta ochadi. Sessiya ichida /resume bilan istalgan eski suhbatni tanlash mumkin.",
+        "ru": "claude --continue открывает последний разговор в текущей папке со всей историей. Внутри сессии /resume позволяет выбрать любой прошлый разговор."
+      }
+    },
+    {
+      "id": "compact-context",
+      "date": "2026-09-25",
+      "command": "/compact",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/sessions",
+      "title": {
+        "en": "Free up context with /compact",
+        "uz": "/compact bilan kontekstni bo'shating",
+        "ru": "Освободите контекст с /compact"
+      },
+      "body": {
+        "en": "/compact replaces a long conversation with a summary and keeps the important context. Use it when the context window is getting full.",
+        "uz": "/compact uzun suhbatni qisqa xulosa bilan almashtiradi va muhim kontekstni saqlab qoladi. Kontekst oynasi to'lib borayotganda ishlating.",
+        "ru": "/compact заменяет длинный разговор кратким резюме и сохраняет важный контекст. Используйте, когда окно контекста заполняется."
+      }
+    },
+    {
+      "id": "clear-start-fresh",
+      "date": "2026-09-25",
+      "command": "/clear",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/sessions",
+      "title": {
+        "en": "Start fresh with /clear",
+        "uz": "/clear bilan toza boshlang",
+        "ru": "Начните заново с /clear"
+      },
+      "body": {
+        "en": "/clear starts a new conversation for a new task. The old one is saved, so you can come back to it later with /resume.",
+        "uz": "/clear yangi vazifa uchun yangi suhbat boshlaydi. Eskisi saqlanib qoladi, keyin unga /resume bilan qaytish mumkin.",
+        "ru": "/clear начинает новый разговор для новой задачи. Старый сохраняется, и к нему можно вернуться через /resume."
+      }
+    },
+    {
+      "id": "plan-mode",
+      "date": "2026-09-25",
+      "command": "shift+tab",
+      "tools": [
+        "Edit",
+        "Write"
+      ],
+      "link": "https://code.claude.com/docs/en/permission-modes",
+      "title": {
+        "en": "Review the plan before any edits",
+        "uz": "O'zgartirishdan oldin rejani ko'ring",
+        "ru": "Проверьте план до любых правок"
+      },
+      "body": {
+        "en": "Press Shift+Tab to cycle permission modes until you reach plan mode. Claude then explores and writes a plan for you to approve before it changes any files.",
+        "uz": "Shift+Tab ni bosib, ruxsat rejimlarini plan mode'ga yetguncha almashtiring. Shunda Claude avval loyihani o'rganib, reja yozadi va siz tasdiqlamaguningizcha fayllarni o'zgartirmaydi.",
+        "ru": "Нажимайте Shift+Tab, переключая режимы разрешений, пока не дойдёте до plan mode. Claude сначала изучит проект и напишет план, а файлы изменит только после вашего одобрения."
+      }
+    },
+    {
+      "id": "claude-md",
+      "date": "2026-09-25",
+      "command": "CLAUDE.md",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/memory",
+      "title": {
+        "en": "Teach Claude your project with CLAUDE.md",
+        "uz": "CLAUDE.md orqali Claude'ga loyihangizni o'rgating",
+        "ru": "Расскажите Claude о проекте в CLAUDE.md"
+      },
+      "body": {
+        "en": "Put build commands, coding rules and conventions in a CLAUDE.md file at the project root. Claude Code loads it automatically in every session.",
+        "uz": "Build buyruqlari, kod yozish qoidalari va kelishuvlarni loyiha ildizidagi CLAUDE.md fayliga yozing. Claude Code uni har bir sessiyada avtomatik o'qiydi.",
+        "ru": "Запишите команды сборки, правила и соглашения в файл CLAUDE.md в корне проекта. Claude Code загружает его автоматически в каждой сессии."
+      }
+    },
+    {
+      "id": "init-claude-md",
+      "date": "2026-09-25",
+      "command": "/init",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/memory",
+      "title": {
+        "en": "Generate a starter CLAUDE.md",
+        "uz": "Tayyor CLAUDE.md yarating",
+        "ru": "Создайте стартовый CLAUDE.md"
+      },
+      "body": {
+        "en": "/init looks at your project and writes a first CLAUDE.md with its structure and commands. Run it once, then edit the file by hand.",
+        "uz": "/init loyihangizni ko'rib chiqib, tuzilishi va buyruqlari bilan birinchi CLAUDE.md faylini yozadi. Bir marta ishga tushiring, keyin faylni o'zingiz to'ldiring.",
+        "ru": "/init изучает проект и пишет первый CLAUDE.md с его структурой и командами. Запустите один раз, а потом дополните файл вручную."
+      }
+    },
+    {
+      "id": "permissions",
+      "date": "2026-09-25",
+      "command": "/permissions",
+      "tools": [
+        "Bash"
+      ],
+      "link": "https://code.claude.com/docs/en/settings-reference",
+      "title": {
+        "en": "Fewer permission prompts with /permissions",
+        "uz": "/permissions bilan kamroq ruxsat so'rovi",
+        "ru": "Меньше запросов разрешений с /permissions"
+      },
+      "body": {
+        "en": "/permissions lets you allow safe commands up front and block risky ones. Claude stops asking about the things you have already approved.",
+        "uz": "/permissions orqali xavfsiz buyruqlarga oldindan ruxsat berib, xavflilarini taqiqlash mumkin. Shunda Claude siz allaqachon ruxsat bergan narsalar haqida qayta so'ramaydi.",
+        "ru": "/permissions позволяет заранее разрешить безопасные команды и запретить рискованные. Claude перестанет спрашивать о том, что вы уже одобрили."
+      }
+    },
+    {
+      "id": "hooks",
+      "date": "2026-09-25",
+      "command": "",
+      "tools": [
+        "Edit",
+        "Write"
+      ],
+      "link": "https://code.claude.com/docs/en/hooks-guide",
+      "title": {
+        "en": "Run scripts automatically with hooks",
+        "uz": "Hook'lar bilan skriptlarni avtomatik ishga tushiring",
+        "ru": "Автоматизируйте действия с помощью хуков"
+      },
+      "body": {
+        "en": "Hooks in settings.json run your own commands at events like after an edit or when a session starts. Use them for things that must happen every time, like formatting.",
+        "uz": "settings.json dagi hook'lar tahrirdan keyin yoki sessiya boshlanganda kabi hodisalarda o'zingizning buyruqlaringizni ishga tushiradi. Har safar bajarilishi shart bo'lgan ishlar uchun qulay, masalan kodni formatlash.",
+        "ru": "Хуки в settings.json запускают ваши команды при событиях, например после правки или при старте сессии. Подходят для того, что должно выполняться каждый раз, например форматирования."
+      }
+    },
+    {
+      "id": "skills",
+      "date": "2026-09-25",
+      "command": ".claude/skills/<name>/SKILL.md",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/skills",
+      "title": {
+        "en": "Make your own slash commands",
+        "uz": "O'z slash-buyruqlaringizni yarating",
+        "ru": "Создавайте свои слэш-команды"
+      },
+      "body": {
+        "en": "Save instructions in .claude/skills/<name>/SKILL.md and run them with /<name>. Great for checklists and workflows you repeat.",
+        "uz": "Ko'rsatmalarni .claude/skills/<nom>/SKILL.md fayliga saqlang va /<nom> bilan ishga tushiring. Takrorlanadigan ishlar va checklist'lar uchun juda qulay.",
+        "ru": "Сохраните инструкции в .claude/skills/<имя>/SKILL.md и запускайте их через /<имя>. Удобно для повторяющихся процессов и чек-листов."
+      }
+    },
+    {
+      "id": "plugins",
+      "date": "2026-09-25",
+      "command": "/plugin",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/plugins/overview",
+      "title": {
+        "en": "Add features with plugins",
+        "uz": "Plugin'lar bilan imkoniyat qo'shing",
+        "ru": "Добавляйте возможности плагинами"
+      },
+      "body": {
+        "en": "/plugin opens the plugin manager, where you can add marketplaces and install plugins that bundle skills, agents, hooks and MCP servers.",
+        "uz": "/plugin plugin menejerini ochadi: u yerda marketplace qo'shib, skill, agent, hook va MCP serverlarni birlashtirgan plugin'larni o'rnatish mumkin.",
+        "ru": "/plugin открывает менеджер плагинов: там можно добавить маркетплейсы и установить плагины со скиллами, агентами, хуками и MCP-серверами."
+      }
+    },
+    {
+      "id": "subagents",
+      "date": "2026-09-25",
+      "command": "/agents",
+      "tools": [
+        "Agent"
+      ],
+      "link": "https://code.claude.com/docs/en/sub-agents",
+      "title": {
+        "en": "Hand focused work to subagents",
+        "uz": "Alohida ishlarni subagent'larga topshiring",
+        "ru": "Поручайте задачи субагентам"
+      },
+      "body": {
+        "en": "Subagents run a task in their own context with their own instructions and tools, then report back. Create and manage them with /agents.",
+        "uz": "Subagent vazifani o'z konteksti, o'z ko'rsatmalari va tool'lari bilan bajarib, natijani qaytaradi. Ularni /agents bilan yaratib, boshqarasiz.",
+        "ru": "Субагент выполняет задачу в собственном контексте со своими инструкциями и инструментами и возвращает результат. Создавайте их и управляйте ими через /agents."
+      }
+    },
+    {
+      "id": "mcp",
+      "date": "2026-09-25",
+      "command": "claude mcp add --transport http <name> <url>",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/mcp",
+      "title": {
+        "en": "Connect databases and APIs with MCP",
+        "uz": "MCP orqali bazalar va API'larni ulang",
+        "ru": "Подключайте базы и API через MCP"
+      },
+      "body": {
+        "en": "MCP servers give Claude access to outside tools and data. Add one with claude mcp add, then Claude can use it in any session.",
+        "uz": "MCP serverlar Claude'ga tashqi tool va ma'lumotlardan foydalanish imkonini beradi. Yangisini claude mcp add bilan qo'shasiz, keyin Claude undan istalgan sessiyada foydalana oladi.",
+        "ru": "MCP-серверы дают Claude доступ к внешним инструментам и данным. Добавьте сервер командой claude mcp add, и Claude сможет использовать его в любой сессии."
+      }
+    },
+    {
+      "id": "mention-files",
+      "date": "2026-09-25",
+      "command": "@src/app.ts",
+      "tools": [
+        "Read",
+        "Grep",
+        "Glob"
+      ],
+      "link": "https://code.claude.com/docs/en/interactive-mode",
+      "title": {
+        "en": "Point Claude at files with @",
+        "uz": "@ bilan kerakli faylni ko'rsating",
+        "ru": "Указывайте файлы через @"
+      },
+      "body": {
+        "en": "Type @ in your prompt to autocomplete a file path, so Claude reads exactly the file you mean instead of searching for it.",
+        "uz": "Xabaringizda @ yozsangiz, fayl yo'li avtomatik to'ldiriladi. Shunda Claude faylni qidirib o'tirmay, aynan siz nazarda tutgan faylni o'qiydi.",
+        "ru": "Напишите @ в сообщении, и путь к файлу подставится автоматически. Claude прочитает именно нужный файл, а не будет его искать."
+      }
+    },
+    {
+      "id": "shell-mode",
+      "date": "2026-09-25",
+      "command": "! npm test",
+      "tools": [
+        "Bash"
+      ],
+      "link": "https://code.claude.com/docs/en/interactive-mode",
+      "title": {
+        "en": "Run a command yourself with !",
+        "uz": "! bilan buyruqni o'zingiz ishga tushiring",
+        "ru": "Запускайте команды сами через !"
+      },
+      "body": {
+        "en": "Start your input with ! to run a shell command directly. Its output goes into the conversation and Claude responds to it.",
+        "uz": "Xabarni ! belgisi bilan boshlasangiz, shell buyrug'i to'g'ridan-to'g'ri bajariladi. Uning natijasi suhbatga qo'shiladi va Claude unga javob beradi.",
+        "ru": "Начните ввод с !, чтобы выполнить shell-команду напрямую. Её вывод попадёт в разговор, и Claude на него ответит."
+      }
+    },
+    {
+      "id": "rewind",
+      "date": "2026-09-25",
+      "command": "Esc Esc",
+      "tools": [
+        "Edit",
+        "Write"
+      ],
+      "link": "https://code.claude.com/docs/en/checkpointing",
+      "title": {
+        "en": "Undo with Esc Esc",
+        "uz": "Esc Esc bilan orqaga qayting",
+        "ru": "Откат через Esc Esc"
+      },
+      "body": {
+        "en": "Press Esc twice with an empty input to rewind. Go back to an earlier point and restore the conversation, the code, or both.",
+        "uz": "Yozish maydoni bo'sh turganda Esc ni ikki marta bosing va rewind menyusi ochiladi. Oldingi nuqtaga qaytib, suhbatni, kodni yoki ikkalasini ham tiklash mumkin.",
+        "ru": "Дважды нажмите Esc при пустом поле ввода, чтобы откатиться. Можно вернуться к более ранней точке и восстановить разговор, код или и то и другое."
+      }
+    },
+    {
+      "id": "switch-model",
+      "date": "2026-09-25",
+      "command": "/model",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/interactive-mode",
+      "title": {
+        "en": "Switch models mid-session",
+        "uz": "Sessiya o'rtasida modelni almashtiring",
+        "ru": "Меняйте модель прямо в сессии"
+      },
+      "body": {
+        "en": "Use /model, or Alt+P (Option+P on macOS), to change the model without losing the conversation. Pick faster or stronger depending on the task.",
+        "uz": "/model yoki Alt+P (macOS'da Option+P) orqali suhbatni yo'qotmasdan modelni almashtirasiz. Vazifaga qarab tezroq yoki kuchliroq modelni tanlang.",
+        "ru": "/model или Alt+P (Option+P на macOS) меняют модель, не теряя разговор. Выбирайте более быструю или более мощную в зависимости от задачи."
+      }
+    },
+    {
+      "id": "context-usage",
+      "date": "2026-09-25",
+      "command": "/context",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/context-window",
+      "title": {
+        "en": "See what fills your context",
+        "uz": "Kontekstni nima egallayotganini ko'ring",
+        "ru": "Посмотрите, чем занят контекст"
+      },
+      "body": {
+        "en": "/context shows what is using the context window: CLAUDE.md, skills, files and the conversation itself. Handy before deciding to /compact.",
+        "uz": "/context kontekst oynasini nima egallayotganini ko'rsatadi: CLAUDE.md, skill'lar, fayllar va suhbatning o'zi. /compact qilishdan oldin foydali.",
+        "ru": "/context показывает, что занимает окно контекста: CLAUDE.md, скиллы, файлы и сам разговор. Полезно перед /compact."
+      }
+    },
+    {
+      "id": "headless",
+      "date": "2026-09-25",
+      "command": "claude -p \"your prompt\" --output-format json",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/headless",
+      "title": {
+        "en": "Use Claude in scripts with -p",
+        "uz": "-p bilan Claude'ni skriptlarda ishlating",
+        "ru": "Используйте Claude в скриптах через -p"
+      },
+      "body": {
+        "en": "claude -p runs Claude without the interactive UI, for scripts and CI. Add --output-format json to get structured output.",
+        "uz": "claude -p Claude'ni interaktiv oynasiz ishga tushiradi, bu skriptlar va CI uchun qulay. Tuzilgan natija olish uchun --output-format json qo'shing.",
+        "ru": "claude -p запускает Claude без интерактивного интерфейса, для скриптов и CI. Добавьте --output-format json, чтобы получить структурированный вывод."
+      }
+    },
+    {
+      "id": "output-style",
+      "date": "2026-09-25",
+      "command": "/output-style concise",
+      "tools": [],
+      "link": "https://code.claude.com/docs/en/output-styles",
+      "title": {
+        "en": "Shorter answers with an output style",
+        "uz": "Output style bilan qisqaroq javoblar",
+        "ru": "Короче ответы со стилем вывода"
+      },
+      "body": {
+        "en": "/output-style concise makes Claude lead with the result and skip the narration. Other built-in styles: Proactive, Explanatory and Learning.",
+        "uz": "/output-style concise dan keyin Claude javobni natijadan boshlaydi va ortiqcha izohlarni tashlab ketadi. Boshqa tayyor uslublar: Proactive, Explanatory va Learning.",
+        "ru": "/output-style concise заставляет Claude начинать с результата и пропускать пояснения. Другие встроенные стили: Proactive, Explanatory и Learning."
+      }
+    },
+    {
+      "id": "background-command",
+      "date": "2026-09-25",
+      "command": "ctrl+b",
+      "tools": [
+        "Bash"
+      ],
+      "link": "https://code.claude.com/docs/en/interactive-mode",
+      "title": {
+        "en": "Send long commands to the background",
+        "uz": "Uzoq buyruqlarni fonga yuboring",
+        "ru": "Отправляйте долгие команды в фон"
+      },
+      "body": {
+        "en": "While Claude runs a long Bash command, press Ctrl+B to move it to the background and keep working. In tmux, press Ctrl+B twice.",
+        "uz": "Claude uzoq davom etadigan Bash buyrug'ini bajarayotganda, Ctrl+B bosib uni fonga o'tkazing va ishni davom ettiring. tmux'da Ctrl+B ni ikki marta bosing.",
+        "ru": "Пока Claude выполняет долгую Bash-команду, нажмите Ctrl+B, чтобы перевести её в фон и продолжить работу. В tmux нажмите Ctrl+B дважды."
+      }
+    }
+  ]
+}

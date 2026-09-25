@@ -53,7 +53,8 @@
     game.section = section;
     App.games[game.id] = game;
     App.order.push(game.id);
-    App.state[game.id] = 'ready';
+    // O'yin bo'lmagan tab (yangiliklar) boshlash ekranisiz, darhol ochiq turadi
+    App.state[game.id] = game.passive ? 'playing' : 'ready';
     game.mount(section);
   };
 
@@ -149,7 +150,12 @@
     g.section.hidden = false;
     document.body.dataset.game = id;
     if (g.show) g.show();
-    showOverlay(overlayFor(id));
+    if (g.passive && guard.phase() !== 'locked') {
+      App.state[id] = 'playing';
+      hideOverlay();
+    } else {
+      showOverlay(overlayFor(id));
+    }
     renderTabs();
     renderHints();
     if (remember) App.post({ type: 'game', value: id });
@@ -229,7 +235,7 @@
     }
 
     if (e.key === 'Escape') {
-      App.pause(pauseText);
+      if (!g.passive) App.pause(pauseText);
       return;
     }
     if (g.keydown(e)) e.preventDefault();
@@ -306,6 +312,9 @@
   let claudeWasActive = false;
   let claudeView = '';
   let claude = { status: 'idle', tool: '', sessions: [] };
+  App.claudeState = () => claude;
+  App.news = [];
+  App.newsRead = [];
   // Tugagan, lekin foydalanuvchi hali ko'rmagan sessiya (Enter bosilguncha ko'rsatiladi)
   let finishedNotice = null;
 
@@ -427,7 +436,10 @@
     for (const a of answered) if (a.fast) App.toast(App.T.fastReply(Math.round(a.ms / 1000), a.streak));
     // Javob yozilgan sessiya endi "tugatdi" deb ko'rsatilmaydi
     if (answered.length) finishedNotice = null;
-    if (guard.phase() === 'free' && overlayFn === lockText) showOverlay(pauseText);
+    if (guard.phase() === 'free' && overlayFn === lockText) {
+      if (current().passive) App.start();
+      else showOverlay(pauseText);
+    }
   }
 
   // O'yin davom etganda "tugatdi" xabari ko'rilgan hisoblanadi
@@ -441,6 +453,7 @@
     const m = e.data;
     if (m.type === 'init') {
       App.best = m.best || {};
+      App.newsRead = m.newsRead || [];
       guard = Guard.createGuard({ strict: m.strict !== false, lastSnoozeAt: m.lastSnoozeAt || 0 });
       for (const id of App.order) if (App.games[id].refresh) App.games[id].refresh();
       if (m.game) switchGame(m.game, false);
@@ -448,6 +461,11 @@
       claude = m;
       onAnswered(guard.update(m.sessions));
       renderClaude();
+      // "Claude hozir nima qilyapti" ga mos maslahat yangilanadi
+      if (App.active === 'news') App.games.news.refresh();
+    } else if (m.type === 'news') {
+      App.news = m.items || [];
+      if (App.games.news) App.games.news.refresh();
     } else if (m.type === 'finished') {
       onFinished(m);
     } else if (m.type === 'waiting') {

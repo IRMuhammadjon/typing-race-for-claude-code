@@ -17,7 +17,7 @@ if (process.argv.includes('--clean')) {
 const from = path.join(cli, '..', 'shared');
 fs.mkdirSync(to, { recursive: true });
 for (const name of fs.readdirSync(from)) {
-  if (name.endsWith('.js')) fs.copyFileSync(path.join(from, name), path.join(to, name));
+  if (name.endsWith('.js') || name.endsWith('.json')) fs.copyFileSync(path.join(from, name), path.join(to, name));
 }
 fs.copyFileSync(path.join(cli, '..', 'LICENSE'), license);
 console.log('shared files synced');
