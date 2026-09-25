@@ -166,6 +166,10 @@
 
   function renderHints() {
     const g = current();
+    if (guard.phase() === 'locked') {
+      ui.hints.innerHTML = `<span class="lock-hint"><kbd>${SNOOZE_KEY}</kbd> ${escapeHtml(App.T.lockHint(SNOOZE_KEY).replace(`${SNOOZE_KEY}: `, ''))}</span>`;
+      return;
+    }
     ui.hints.innerHTML = g
       .hints()
       .map(([key, label]) => `<span><kbd>${escapeHtml(key)}</kbd> ${escapeHtml(label)}</span>`)
@@ -367,9 +371,9 @@
   let lastPhase = 'free';
   let lastPanelTitle = '';
 
+  // Qo'shimcha vaqt maslahati overlay'da emas, pastdagi tugmalar qatorida turadi
   function lockText() {
-    const T = App.T;
-    return [T.lockTitle(clock(guard.waitingMs())), `${T.lockSub(quote(guard.oldest()))} · ${T.lockHint(SNOOZE_KEY)}`];
+    return [App.T.lockTitle(clock(guard.waitingMs())), App.T.lockSub(quote(guard.oldest()))];
   }
 
   function snooze() {
@@ -387,6 +391,7 @@
   setInterval(() => {
     const phase = guard.phase();
     if (phase !== 'free' || lastPhase !== 'free') renderClaude();
+    if ((phase === 'locked') !== (lastPhase === 'locked')) renderHints();
     if (phase === 'locked') {
       const st = App.state[App.active];
       if (overlayFn === lockText) showOverlay(lockText);

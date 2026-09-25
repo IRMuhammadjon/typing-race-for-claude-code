@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.1
+
+- The lock screen is tidier: the extra-time hint moved from the overlay to the key hints line
+
 ## 0.7.0
 
 - **Work first, then play:** when Claude finishes, you get 10 seconds to finish your round, then the game locks until you reply to Claude

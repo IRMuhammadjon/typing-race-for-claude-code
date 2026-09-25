@@ -409,6 +409,7 @@ footer {
   font-size: 12px;
   color: var(--sub);
 }
+footer .lock-hint { color: var(--main); }
 kbd {
   font-family: inherit;
   font-size: 11px;
