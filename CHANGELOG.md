@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.2
+
+- The lock now opens when you send a new prompt in any Claude session. Before, resuming a conversation (`--continue`, `/resume`) moved it to a new session and the lock kept waiting for the old one
+
 ## 0.7.1
 
 - The lock screen is tidier: the extra-time hint moved from the overlay to the key hints line

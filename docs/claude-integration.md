@@ -137,7 +137,7 @@ Reply with exactly one short sentence saying where the games opened.
 
 ### "Avval ish, keyin o'yin" qulfi
 
-Claude tugagach, o'yin 10 soniyadan keyin qulflanadi. Qulf foydalanuvchi o'sha sessiyaga javob yozganda ochiladi. "Javob yozildi" signali alohida hodisa emas, kutilayotgan sessiyaning holati yana `busy` bo'lishidir: yangi `user` yozuvi paydo bo'ladi. Bir vaqtda bir nechta sessiya kutilishi mumkin. Kutish vaqti tugash hodisasidan boshlab hisoblanadi, 30 soniyadan tez javob "tez javob" deb sanaladi. Kod: [shared/guard.js](https://github.com/IRMuhammadjon/typing-race-for-claude-code/blob/main/shared/guard.js).
+Claude tugagach, o'yin 10 soniyadan keyin qulflanadi. Qulf foydalanuvchi o'sha sessiyaga javob yozganda ochiladi. "Javob yozildi" signali alohida hodisa emas: **istalgan** sessiyada yangi navbat boshlanishi (boshqa holatdan `busy`ga o'tish, ya'ni yangi `user` yozuvi). Faqat o'sha sessiyaga qarash yetarli emas, chunki Claude Code suhbat `--continue` yoki `/resume` bilan davom ettirilganda tarixni **yangi ID'li yangi faylga** ko'chiradi va eski sessiya boshqa hech qachon ishlamaydi. Ilgaridan ishlab turgan boshqa sessiya esa javob hisoblanmaydi. Kutish vaqti tugash hodisasidan boshlab hisoblanadi, 30 soniyadan tez javob "tez javob" deb sanaladi. Kod: [shared/guard.js](https://github.com/IRMuhammadjon/typing-race-for-claude-code/blob/main/shared/guard.js).
 
 ## Cheklovlar
 

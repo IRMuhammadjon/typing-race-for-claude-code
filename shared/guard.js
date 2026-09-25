@@ -17,6 +17,8 @@
     let graceUntil = 0;
     let snoozeUntil = 0;
     let fastStreak = 0;
+    // Sessiyalarning oldingi holati: yangi navbat (boshqa holatdan "busy"ga o'tish) shu bilan aniqlanadi
+    let lastStatus = new Map();
 
     function oldest() {
       let first = null;
@@ -42,17 +44,22 @@
         pending.set(session.id, { id: session.id, title: session.title, since: t });
       },
 
-      // Claude holati yangilandi. Kutilayotgan sessiya yana ishlayotgan bo'lsa, demak javob yozildi.
-      // Javob berilgan sessiyalar ro'yxatini qaytaradi: [{ title, ms, fast }]
+      // Claude holati yangilandi. Foydalanuvchi Claude'ga yangi savol yozgan bo'lsa (istalgan sessiyada
+      // yangi navbat boshlangan bo'lsa), u ishga qaytgan: kutilayotgan hamma sessiyalar "javob berildi".
+      // Istalgan sessiya hisobga olinadi, chunki Claude Code suhbat davom ettirilganda (--continue, /resume)
+      // uni yangi ID bilan yangi faylga ko'chiradi va eski sessiya boshqa hech qachon ishlamaydi.
+      // Javob berilgan sessiyalar ro'yxatini qaytaradi: [{ title, ms, fast, streak }]
       update(sessions) {
         const answered = [];
         const t = now();
+        const newTurn = sessions.some((s) => s.status === 'busy' && lastStatus.get(s.id) !== 'busy');
+        lastStatus = new Map(sessions.map((s) => [s.id, s.status]));
         for (const [id, p] of pending) {
           const s = sessions.find((x) => x.id === id);
-          if (s && s.status !== 'busy') continue;
+          if (s && s.status !== 'busy' && !newTurn) continue;
           pending.delete(id);
-          // Sessiya yopilgan yoki eskirgan bo'lsa, javob deb hisoblanmaydi
-          if (!s) continue;
+          // Sessiya yopilgan yoki eskirgan bo'lsa (va yangi savol ham yo'q), javob deb hisoblanmaydi
+          if (!s && !newTurn) continue;
           const ms = t - p.since;
           const fast = ms <= FAST_MS;
           fastStreak = fast ? fastStreak + 1 : 0;
