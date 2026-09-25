@@ -50,7 +50,9 @@ function transcriptStatus(text) {
     } catch {
       continue; // bo'sh yoki kesilgan qator
     }
-    if (entry.isSidechain || entry.isMeta || !entry.message) continue;
+    // queueTranscriptOnly: Claude Code faqat tarix uchun yozgan tizim xabari (masalan, sessiya qayta ochilganda
+    // fon vazifasi haqidagi bildirishnoma). U yangi navbat boshlamaydi, shuning uchun "ishlayapti" hisoblanmaydi.
+    if (entry.isSidechain || entry.isMeta || entry.queueTranscriptOnly || !entry.message) continue;
     const content = entry.message.content;
 
     if (entry.type === 'assistant') {

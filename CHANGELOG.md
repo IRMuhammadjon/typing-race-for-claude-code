@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+
+- Fixed a finished session showing as "working": after VS Code reloads, Claude Code writes a transcript-only system note (for example about a background task) that does not start a new turn, and it is now ignored
+
 ## 0.8.0
 
 - New first tab: **📰 News**, short Claude Code tips in English, Uzbek and Russian with the exact command and a docs link
