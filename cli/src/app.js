@@ -129,10 +129,8 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     term.mouse(Boolean(g.mouse) && app.state[g.id] === 'playing');
   }
 
-  const lockText = () => [
-    app.T.lockTitle(clock(guard.waitingMs())),
-    `${app.T.lockSub(quote(guard.oldest()))} · ${app.T.lockHint(SNOOZE_KEY)}`,
-  ];
+  // Qo'shimcha vaqt maslahati overlay'ga sig'maydi: u pastdagi tugmalar qatorida ko'rsatiladi
+  const lockText = () => [app.T.lockTitle(clock(guard.waitingMs())), app.T.lockSub(quote(guard.oldest()))];
 
   app.start = () => {
     if (guard.phase() === 'locked') return app.toast(app.T.lockedToast);
@@ -394,7 +392,8 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
     if (overlayFn) {
       s.dim(gameBox.x, gameBox.y, gameBox.w, gameBox.h, C.sub, bg);
       const [title, text] = overlayFn();
-      const bw = Math.min(W, Math.max([...title].length, [...text].length) + 6);
+      // Butun eniga: chetlaridan xiralashgan o'yin chiqib turmasin
+      const bw = W;
       const bx = x0 + Math.floor((W - bw) / 2);
       const by = gameBox.y + Math.floor(gameBox.h / 2) - 2;
       s.fill(bx, by, bw, 4, alt);
@@ -413,7 +412,9 @@ function createApp({ term, gameFactories, lang, game, strict = true, returnFocus
       return [...full].length <= W ? full : hints.map(([k]) => k).join(' · ');
     };
     const T = app.T;
-    centerText(s, rows - 3, x0, W, clip(hintLine(g.hints(T)), W), { fg: C.sub });
+    // Qulf paytida o'yin tugmalari o'rniga qo'shimcha vaqt maslahati turadi
+    if (guard.phase() === 'locked') centerText(s, rows - 3, x0, W, clip(T.lockHint(SNOOZE_KEY), W), { fg: C.main });
+    else centerText(s, rows - 3, x0, W, clip(hintLine(g.hints(T)), W), { fg: C.sub });
     const global = [['ctrl+n', T.keys.next], ['ctrl+l', T.keys.lang], ['ctrl+c', T.keys.quit]];
     centerText(s, rows - 2, x0, W, clip(hintLine(global), W), { fg: C.sub });
     if (rows > 20) centerText(s, rows - 1, x0, W, 'by Muhammadjon Rahmatullayev', { fg: C.sub });
